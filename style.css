@@ -1,0 +1,29 @@
+body {
+    font-family: 'Inter', sans-serif;
+}
+/* Removed .math-problem-display span, sub, sup, and .latex-formula styles as MathJax handles rendering */
+.math-problem-display {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 600; /* font-semibold */
+    text-align: center;
+}
+.rtl-text {
+    direction: rtl;
+    text-align: right;
+}
+.chat-message-user {
+    background-color: #DBEAFE; /* blue-100 */
+    align-self: flex-end;
+    text-align: right;
+    border-radius: 0.75rem 0.75rem 0.25rem 0.75rem; /* rounded-xl rounded-bl-sm */
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+}
+.chat-message-ai {
+    background-color: #EDE9FE; /* purple-100 */
+    align-self: flex-start;
+    text-align: right; /* Changed to right for RTL */
+    border-radius: 0.75rem 0.75rem 0.75rem 0.25rem; /* rounded-xl rounded-br-sm */
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+}
