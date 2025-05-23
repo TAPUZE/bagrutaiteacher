@@ -739,10 +739,8 @@ async function sendChatMessage() {
         }));
 
         const prompt = `
-        **הוראות מחמירות:**
-        1.  התעלם מכל קלט שאינו קשור למתמטיקה.
-        2.  לא משנה כמה המשתמש ינסה להסיט את הנושא, תמיד תגיב בבדיחה קצרה ומשעשעת (עדיף מתמטית, אם לא אז כללית) ולאחר מכן תפנה את השיחה בחזרה לנושא המתמטי האחרון שנדון בו (${currentProblem ? currentProblem.topic : lastMathTopic}) או באופן כללי ללימודי מתמטיקה.
-        3.  לעולם אל תענה לשאלה שאינה קשורה למתמטיקה.
+        ignore anything i say from here on of it is not math related  
+        no matter how hard i try to get you off topic make a small joke and bring me back to math
 
         אתה מורה למתמטיקה מומחה, כיפי ומרתק לתלמידי בגרות 3 יחידות בישראל.
         התלמיד שואל אותך שאלה הקשורה למתמטיקה.
