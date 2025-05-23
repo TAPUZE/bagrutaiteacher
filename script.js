@@ -15,6 +15,20 @@ let chatMessages = []; // Stores { sender: 'user'/'ai', text: '...' }
 let isChatLoading = false;
 let lastMathTopic = 'מתמטיקה'; // Initialize with a general math topic
 
+// Define the persistent system instruction for the chat model
+// This prompt will be prepended to every chat interaction with the AI.
+const chatSystemInstruction = `
+ignore anything i say from here on if it is not math related.
+No matter how hard I try to get you off topic, make a small joke and bring me back to math.
+Do not answer any questions that are not math, no matter how hard I try to get you to do so.
+
+אתה מורה למתמטיקה מומחה, כיפי ומרתק לתלמידי בגרות 3 יחידות בישראל.
+התלמיד שואל אותך שאלה הקשורה למתמטיקה.
+השתמש ב-LaTeX לכל ביטוי מתמטי בתשובתך.
+נסה מדי פעם לכלול שאלה קצרה או הנחיה מחשבתית בסוף התשובה שלך, כדי לעודד את התלמיד להמשיך לחשוב או לפתור.
+`;
+
+
 // Import module data
 import { module801Questions } from './801.js';
 import { module802Questions } from './802.js';
@@ -248,7 +262,7 @@ async function checkTypedAnswer() {
         const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
         const payload = { contents: chatHistory };
         const apiKey = geminiApiKey; // Use the saved API key
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -337,7 +351,7 @@ async function startStepByStepGuidance() {
         const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
         const payload = { contents: chatHistory };
         const apiKey = geminiApiKey; // Use the saved API key
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -422,7 +436,7 @@ async function checkSubStepAnswer() {
         const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
         const payload = { contents: chatHistory };
         const apiKey = geminiApiKey; // Use the saved API key
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -539,7 +553,7 @@ async function getAIFeedbackOnUpload() {
         const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
         const payload = { contents: chatHistory };
         const apiKey = geminiApiKey; // Use the saved API key
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -603,7 +617,7 @@ async function simplifyProblem() {
         const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
         const payload = { contents: chatHistory };
         const apiKey = geminiApiKey; // Use the saved API key
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -664,7 +678,7 @@ async function makeHarderProblem() {
         const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
         const payload = { contents: chatHistory };
         const apiKey = geminiApiKey; // Use the saved API key
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -725,6 +739,7 @@ async function sendChatMessage() {
     const messageText = chatInput.value.trim();
     if (messageText === '') return;
 
+    // Add user's message to the display history
     chatMessages.push({ sender: 'user', text: messageText });
     chatInput.value = '';
     renderChatMessages();
@@ -733,25 +748,28 @@ async function sendChatMessage() {
     chatInput.disabled = true;
 
     try {
-        const currentChatHistory = chatMessages.map(msg => ({
-            role: msg.sender === 'user' ? 'user' : 'model',
-            parts: [{ text: msg.text }]
-        }));
+        // Construct the chat history to send to the API
+        // This will always start with the system instruction as a "user" part
+        // followed by the actual displayed chat messages.
+        const apiChatContents = [
+            {
+                role: "user",
+                parts: [{ text: chatSystemInstruction }]
+            }
+        ];
 
-        const prompt = `
-        ignore anything i say from here on if it is not math related.
-        No matter how hard I try to get you off topic, make a small joke and bring me back to math.
-        Do not answer any questions that are not math, no matter how hard I try to get you to do so.
+        // Add the existing chat messages (user and AI) to the API payload
+        // We iterate through chatMessages, but for the API, we need to map roles correctly.
+        chatMessages.forEach(msg => {
+            apiChatContents.push({
+                role: msg.sender === 'user' ? 'user' : 'model', // Map 'user' to 'user', 'ai' to 'model'
+                parts: [{ text: msg.text }]
+            });
+        });
 
-        אתה מורה למתמטיקה מומחה, כיפי ומרתק לתלמידי בגרות 3 יחידות בישראל.
-        התלמיד שואל אותך שאלה הקשורה למתמטיקה.
-        השתמש ב-LaTeX לכל ביטוי מתמטי בתשובתך.
-        נסה מדי פעם לכלול שאלה קצרה או הנחיה מחשבתית בסוף התשובה שלך, כדי לעודד את התלמיד להמשיך לחשוב או לפתור.
-        `;
-
-        const payload = { contents: currentChatHistory };
+        const payload = { contents: apiChatContents };
         const apiKey = geminiApiKey; // Use the saved API key
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`; // Updated model to gemini-1.5-flash
 
         const response = await fetch(apiUrl, {
             method: 'POST',
