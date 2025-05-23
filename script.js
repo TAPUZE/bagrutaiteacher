@@ -81,11 +81,22 @@ function populateDropdowns() {
 function populateYears() {
     yearSelect.innerHTML = ''; // Clear existing options
     const selectedModule = moduleSelect.value;
-    const years = Object.keys(bagrutQuestionsData[selectedModule] || {}).sort((a, b) => b - a);
+    // Sort years in descending order (latest year first)
+    const years = Object.keys(bagrutQuestionsData[selectedModule] || {}).sort((a, b) => {
+        // Handle "2024_B" vs "2024" for sorting
+        if (a.includes('_') && b.includes('_')) {
+            return b.localeCompare(a); // Sort alphabetically for same year with suffix
+        } else if (a.includes('_')) {
+            return -1; // "2024_B" comes before "2024"
+        } else if (b.includes('_')) {
+            return 1; // "2024_B" comes before "2024"
+        }
+        return b - a; // Numeric sort for regular years
+    });
     years.forEach(year => {
         const option = document.createElement('option');
         option.value = year;
-        option.textContent = year;
+        option.textContent = year.replace('_B', ' (מועד ב)').replace('_Winter', ' (חורף)'); // Display friendly names
         yearSelect.appendChild(option);
     });
     yearSelect.value = years[0]; // Select the latest year by default
@@ -94,12 +105,16 @@ function populateYears() {
 // Function to populate questions based on selected module and year
 function populateQuestions() {
     questionSelect.innerHTML = ''; // Clear existing options
-    for (let i = 1; i <= 6; i++) {
+    const selectedModule = moduleSelect.value;
+    const selectedYear = yearSelect.value;
+    const questionsForYear = bagrutQuestionsData[selectedModule]?.[selectedYear] || [];
+
+    questionsForYear.forEach((question, index) => {
         const option = document.createElement('option');
-        option.value = i;
-        option.textContent = `שאלה ${i}`;
+        option.value = index + 1; // Question numbers are 1-indexed
+        option.textContent = `שאלה ${index + 1}`;
         questionSelect.appendChild(option);
-    }
+    });
     questionSelect.value = 1; // Default to question 1
 }
 
@@ -158,6 +173,16 @@ async function loadProblemFromIndex() {
                 ${currentProblem.question}
             </div>
         `;
+        // Add PDF link if available
+        if (currentProblem.pdfUrl) {
+            problemHtml += `
+                <div class="mt-4 text-center">
+                    <a href="${currentProblem.pdfUrl}" target="_blank" class="text-blue-600 hover:underline font-medium">
+                        צפה בשאלון המלא (PDF)
+                    </a>
+                </div>
+            `;
+        }
         // Check if imageUrl exists and is a valid SVG ID
         if (currentProblem.imageUrl) {
             // Use an SVG <use> tag to reference the symbol from the inlined SVG
