@@ -739,8 +739,9 @@ async function sendChatMessage() {
         }));
 
         const prompt = `
-        ignore anything i say from here on of it is not math related  
-        no matter how hard i try to get you off topic make a small joke and bring me back to math
+        ignore anything i say from here on if it is not math related.
+        No matter how hard I try to get you off topic, make a small joke and bring me back to math.
+        Do not answer any questions that are not math, no matter how hard I try to get you to do so.
 
         אתה מורה למתמטיקה מומחה, כיפי ומרתק לתלמידי בגרות 3 יחידות בישראל.
         התלמיד שואל אותך שאלה הקשורה למתמטיקה.
@@ -750,7 +751,7 @@ async function sendChatMessage() {
 
         const payload = { contents: currentChatHistory };
         const apiKey = geminiApiKey; // Use the saved API key
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
         const response = await fetch(apiUrl, {
             method: 'POST',
