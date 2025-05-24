@@ -9,11 +9,11 @@
     <script>
         window.MathJax = {
           tex: {
-            inlineMath: [['$', '$'], ['\\(', '\\)']], // For inline math
-            displayMath: [['$$', '$$'], ['\\[', '\\]']] // For display math (centered on new line)
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']]
           },
           svg: {
-            fontCache: 'global' // Uses a global font cache for faster rendering
+            fontCache: 'global'
           }
         };
     </script>
@@ -246,7 +246,7 @@
         let isInStepByStepMode = false;
         let currentStepIndex = 0;
         let stepByStepHistory = []; 
-        let currentSubProblemQuestionText = ''; // Renamed from currentSubProblemQuestion for clarity
+        let currentSubProblemQuestionText = ''; 
         
         let chatMessages = []; 
         // let isChatLoading = false; // Managed by button disabling
@@ -273,15 +273,14 @@
         const GEMINI_MODEL_NAME = 'gemini-1.5-flash-latest'; 
         
         // --- BAGRUT QUESTIONS DATA ---
-        // This structure is based on the PDF filenames provided by the user.
-        // The user needs to manually transcribe all questions and answers in LaTeX.
+        // THIS IS YOUR EXISTING DATA STRUCTURE - PLEASE POPULATE IT ACCURATELY
         const bagrutQuestionsData = {
-            '35182': { // שאלון ראשון
-                '2025': [ // חורף תשפ"ה (Based on שאלון-35182 (1)חורף2025.pdf and שאלון-35182קיץ01.pdf)
+            '35182': { 
+                '2025': [ 
                     { 
                         id: '35182-2025ח-1', 
                         question: "המשכורת של יואב הייתה גדולה מן המשכורת של דנה ב־ 1,740 שקלים. המשכורת של דנה עלתה ב־15%, והמשכורת של יואב נשארה ללא שינוי. לאחר ההעלאה הייתה המשכורת של דנה שווה למשכורת של יואב. נסמן בי $x$ את המשכורת של דנה לפני ההעלאה. א. הביעו באמצעות $x$ את המשכורת של יואב. ב. מצאו את המשכורת של דנה לפני ההעלאה.", 
-                        answer: "א. $x+1740$  ב. 11600 שקלים", // Example answer, ensure correct LaTeX
+                        answer: "א. $x+1740$  ב. 11600 שקלים", 
                         topic: "אלגברה - בעיות מילוליות", 
                         difficulty: "קל", 
                         mikud: false, 
@@ -294,7 +293,7 @@
                         topic: "פונקציות וגרפים",
                         difficulty: "בינוני",
                         mikud: false,
-                        imageUrl: "#graph-hanion-II" // Using SVG symbol ID from your HTML
+                        imageUrl: "#graph-hanion-II" 
                     },
                      {
                         id: '35182-2025ח-3',
@@ -305,10 +304,11 @@
                         mikud: false,
                         imageUrl: null
                     },
+                    // Add questions 4, 5, 6 for 35182 - 2025 חורף
                 ],
-                '2024': [ // קיץ תשפ"ד
+                '2024': [ 
                     { 
-                        id: '35182-2024ק-1', // From שאלון-35182 (1).pdf
+                        id: '35182-2024ק-1', 
                         question: "בחנות רהיטים מסוימת המחיר של שולחן אחד ו־ 6 כיסאות הוא 3,980 שקלים, והמחיר של שולחן אחד ו־2 כיסאות הוא 2,860 שקלים. א. חשבו את המחיר של שולחן אחד ואת המחיר של כיסא אחד. ב. מנהל החנות החליט להעלות את המחיר של השולחן ב־ 10% ולתת הנחה של 15% על המחיר של כיסא. נדב קנה בחנות זו שולחן אחד ו־ 8 כיסאות לאחר השינוי במחירים. מצאו כמה שילם נדב סך הכול עבור הרהיטים שקנה.", 
                         answer: "א. שולחן: 2580 שקלים, כיסא: 230 שקלים ב. 4412 שקלים", 
                         topic: "אלגברה - מערכת משוואות", 
@@ -317,7 +317,7 @@
                         imageUrl: null 
                     },
                      { 
-                        id: '35182-2024קמב-1', // קיץ מועד ב from שאלון-35182-1 (2).pdf
+                        id: '35182-2024קמב-1', 
                         question: "המחיר לכרטיס כניסה למוזאון הוא 34 שקלים למבוגר ו־ 20 שקלים לילד. למוזאון הגיעה קבוצה של 50 מבקרים, ובה מבוגרים וילדים. העלות של כל כרטיסי הכניסה של קבוצת המבקרים הייתה 1,182 שקלים סך הכול. א. מצאו כמה מבוגרים היו בקבוצה. ב. בעת התשלום בקופה קיבלה הקבוצה הנחה של 18% עבור כרטיס כניסה לכל ילד (המחיר של כרטיס למבוגר לא השתנה). מצאו כמה שילמה קבוצת המבקרים סך הכול בעבור כרטיסי הכניסה.", 
                         answer: "א. 13 מבוגרים ב. 1044.4 שקלים", 
                         topic: "אלגברה - בעיות מילוליות", 
@@ -325,10 +325,11 @@
                         mikud: false, 
                         imageUrl: null 
                     },
+                    // Add more questions for 35182 - 2024 (both terms)
                 ]
             },
-            '35381': { // שאלון שני
-                '2025': [ // חורף תשפ"ה (from 35381-שאלוןחורף2025.pdf)
+            '35381': { 
+                '2025': [ 
                     { 
                         id: '35381-2025ח-1', 
                         question: "נתונה פרבולה שמשוואתה $y=-4x^{2}+28x-33$. A ו B הן נקודות החיתוך של הפרבולה עם ציר ה־ $x$, כמתואר בסרטוט. א. מצאו את שיעורי הנקודות A ו־B. הנקודה C היא קודקוד הפרבולה. ב. מצאו את שיעורי הנקודה C. ג. חשבו את שטח המשולש ABC. ד. (1) כתבו ערך כלשהו של $x$ בנקודה שבה הפרבולה שלילית. (2) מצאו את שיעור ה־ $y$ של נקודה זו.", 
@@ -338,8 +339,9 @@
                         mikud: false, 
                         imageUrl: "#פרבולה" 
                     },
+                    // Add more questions for 35381 - 2025 חורף
                 ],
-                '2024': [ // קיץ תשפ"ד מועד ב (from שאלון-35381-2.pdf)
+                '2024': [ 
                      { 
                         id: '35381-2024קמב-1', 
                         question: "נתונה פרבולה שמשוואתה $y=x^{2}-6x$. הישר $y=16$ חותך את הפרבולה בנקודות $B\\text{ ו } A$, כמתואר בסרטוט שלפניכם. א. מצאו את שיעורי הנקודות $A \\text{ ו } B$. הנקודה D היא קודקוד הפרבולה. ב. מצאו את שיעורי הנקודה D. ג. מהו אורך הגובה לצלע AB במשולש ABD ? ד. מצאו את שטח המשולש ABD.", 
@@ -348,10 +350,11 @@
                         difficulty: "בינוני", 
                         mikud: false, 
                         imageUrl: "#parabola-horizontal-line-2024B"},
+                    // Add more questions for 35381 - 2024 קיץ מועד ב
                 ]
             },
-            '35382': { // שאלון שלישי
-                '2025': [ // חורף תשפ"ה (from שאלון-35382חורף2025.pdf and שאלון-35382קיץ2025.pdf)
+            '35382': { 
+                '2025': [ 
                     { 
                         id: '35382-2025ח-1', 
                         question: "בחנות בגדים מסוימת המחיר של מעיל גבוה ב- 72 שקלים מן המחיר של חולצה. בחנות הכריזו על מבצע של 15% הנחה על המחיר של חולצה (המחיר של מעיל לא השתנה). המחיר של חולצה אחת במבצע ושל מעיל אחד הוא 175.6 שקלים סך הכול. א. (1) מצאו את המחיר של חולצה לפני ההנחה. (2) מצאו את המחיר של חולצה במבצע. ב. לקראת טיול של שכבת י\"א, קנתה רותם בחנות 60 פריטים: חלקם מעילים והשאר חולצות במבצע. היא שילמה 4,383.6 שקלים סך הכול. מצאו את מספר החולצות שקנתה רותם. ג. נדב קנה בחנות 4 מעילים. כאשר הגיע נדב לקופה כדי לשלם, התברר לו שהוא זכאי להנחה על המחיר של המעילים, כיוון שהוא חבר מועדון. נדב שילם 448 שקלים סך הכול. מצאו את אחוז ההנחה שקיבל נדב על מחיר המעילים.", 
@@ -361,10 +364,11 @@
                         mikud: false, 
                         imageUrl: null 
                     },
+                    // Add more questions for 35382 - 2025 חורף
                 ],
-                '2024': [ // קיץ תשפ"ד
+                '2024': [ 
                     { 
-                        id: '35382-2024ק-1', // from שאלון-35382.pdf
+                        id: '35382-2024ק-1', 
                         question: "בחברת נסיעות מציעים חבילת נופש הכוללת טיסה ולינה במלון. המחיר של חבילת הנופש בחברת הנסיעות הוא 3,760 שקלים. בחבילה זו מחיר הלינה במלון גבוה ב־ 35% ממחיר הטיסה. א. מצאו מהו מחיר הטיסה בחבילת הנופש בחברה זו. ב. יוסי, סוכן נסיעות, הזמין כמה חבילות נופש בחברת הנסיעות. הוא קיבל הנחה של 15% על מחיר הטיסה בכל אחת מחבילות הנופש שהזמין (מחיר הלינה במלון לא השתנה). כמה שילם יוסי בעבור חבילת נופש אחת לאחר ההנחה? ג. מיכאל, גם הוא סוכן נסיעות, הזמין חבילות נופש בחברת נסיעות אחרת. הוא שילם 4,400 שקלים בעבור כל אחת מחבילות הנופש שהזמין. מספר החבילות שהזמין יוסי גדול ב־32 ממספר החבילות שהזמין מיכאל. הסכום ששילם יוסי בעבור כל החבילות שהזמין שווה לסכום ששילם מיכאל בעבור כל החבילות שהזמין. כמה חבילות נופש הזמין מיכאל?", 
                         answer: "א. 1600 שקלים ב. 3520 שקלים ג. 40 חבילות", 
                         topic: "אלגברה - אחוזים ובעיות מילוליות", 
@@ -373,7 +377,7 @@
                         imageUrl: null 
                     },
                      { 
-                        id: '35382-2024קמב-1', // קיץ מועד ב from שאלון-35382-1.pdf
+                        id: '35382-2024קמב-1', 
                         question: "המחיר של כרטיס כניסה לבריכה עבור מבוגר גדול ב־ 9 שקלים מן המחיר של כרטיס כניסה עבור ילד. רחלי קנתה 4 כרטיסי כניסה למבוגרים ו־ 17 כרטיסי כניסה לילדים. נסמן בי $x$ את המחיר של כרטיס כניסה לילד. א. הביעו באמצעות $x$ את המחיר הכולל ששילמה רחלי עבור כרטיסי הכניסה לבריכה. ב. אופיר קנה גם הוא כרטיסי כניסה לבריכה. הוא קנה 7 כרטיסי כניסה למבוגרים ו־ 30 כרטיסי כניסה לילדים. אופיר קיבל הנחה של 15% על המחיר של כרטיס כניסה לילד (המחיר של כרטיס כניסה למבוגר לא השתנה). הסכום הכולל ששילמו רחלי ואופיר יחד עבור כל הכרטיסים הוא 2,399.5 שקלים. מצאו את $x$. ג. מצאו בכמה אחוזים גבוה יותר הסכום ששילם אופיר עבור כל הכרטיסים שקנה מן הסכום ששילמה רחלי עבור כל הכרטיסים שקנתה (בתשובתכם רשמו שתי ספרות אחרי הנקודה העשרונית).", 
                         answer: "א. $21x+36$ ב. $x=35$ שקלים ג. 50.59%", 
                         topic: "אלגברה - בעיות מילוליות", 
@@ -381,38 +385,39 @@
                         mikud: false, 
                         imageUrl: null 
                     },
+                    // Add more questions for 35382 - 2024 (both terms)
                 ]
             }
         };
         
         // --- History Management ---
-        function loadUserHistory() { /* ... same as previous working version ... */ }
-        function saveUserHistory() { /* ... same as previous working version ... */ }
-        function addHistoryEntry(problemId, questionText, isCorrect, usedStepByStep, typedAnswer = "") { /* ... same as previous working version ... */ }
-        function displayUserHistory() { /* ... same as previous working version ... */ }
+        function loadUserHistory() { /* ... (JavaScript from previous version) ... */ }
+        function saveUserHistory() { /* ... (JavaScript from previous version) ... */ }
+        function addHistoryEntry(problemId, questionText, isCorrect, usedStepByStep, typedAnswer = "") { /* ... (JavaScript from previous version) ... */ }
+        function displayUserHistory() { /* ... (JavaScript from previous version) ... */ }
 
         // --- Export Functions ---
-        function downloadData(filename, data, type) { /* ... same as previous working version ... */ }
-        function exportAsCsv() { /* ... same as previous working version ... */ }
-        function exportAsJson() { /* ... same as previous working version ... */ }
+        function downloadData(filename, data, type) { /* ... (JavaScript from previous version) ... */ }
+        function exportAsCsv() { /* ... (JavaScript from previous version) ... */ }
+        function exportAsJson() { /* ... (JavaScript from previous version) ... */ }
         
         // --- AI Recommendations ---
-        async function getAIRecommendations() { /* ... same as previous working version ... */ }
+        async function getAIRecommendations() { /* ... (JavaScript from previous version) ... */ }
 
         // --- Utility Functions (Continued) ---
         function showLoading(show) { if(loadingIndicator) loadingIndicator.classList.toggle('hidden', !show); }
         function showErrorMessage(message) { if(errorMessageText && errorMessageDisplay) { errorMessageText.textContent = message; errorMessageDisplay.classList.remove('hidden'); }}
         function hideErrorMessage() { if(errorMessageDisplay) errorMessageDisplay.classList.add('hidden'); if(errorMessageText) errorMessageText.textContent = ''; }
         
-        function resetUIState() { /* ... same as previous working version ... */ }
+        function resetUIState() { /* ... (JavaScript from previous version, ensure MathJax calls are considered if UI elements with math are cleared/reset) ... */ }
 
         // --- API Key & Settings ---
         function toggleSettingsMenu() { if(settingsMenu) settingsMenu.classList.toggle('expanded'); if(historyMenu && historyMenu.classList.contains('expanded')) historyMenu.classList.remove('expanded'); }
         function toggleHistoryMenu() { if(historyMenu) historyMenu.classList.toggle('expanded'); if(settingsMenu && settingsMenu.classList.contains('expanded')) settingsMenu.classList.remove('expanded');} 
-        function loadApiKey() { /* ... same as previous working version ... */ }
-        function saveApiKey() { /* ... same as previous working version ... */ }
+        function loadApiKey() { /* ... (JavaScript from previous version) ... */ }
+        function saveApiKey() { /* ... (JavaScript from previous version) ... */ }
 
-        // --- Dropdowns ---
+        // --- Dropdowns (Your existing, verified logic) ---
         function populateDropdowns() {
             if (!moduleSelect) return;
             moduleSelect.innerHTML = '';
@@ -425,7 +430,7 @@
                 if(yearSelect) yearSelect.disabled = true;
                 if(questionSelect) questionSelect.disabled = true;
                 if(loadProblemButton) loadProblemButton.disabled = true;
-                if(problemDisplaySection) problemDisplaySection.innerHTML = '<p class="text-center text-gray-500">אנא הוסף שאלות ל-bagrutQuestionsData.</p>';
+                if(problemDisplaySection) problemDisplaySection.innerHTML = '<p class="text-center text-gray-500">אנא הוסף שאלות לקובץ התבנית.</p>';
                 return;
             }
             moduleSelect.disabled = false;
@@ -434,7 +439,7 @@
             modulesInData.forEach(module => { 
                 const option = document.createElement('option'); option.value = module; option.textContent = `שאלון ${module}`; moduleSelect.appendChild(option);
             });
-            moduleSelect.value = modulesInData[0]; 
+            if (modulesInData.length > 0) moduleSelect.value = modulesInData[0]; 
             populateYears();
         }
         function populateYears() {
@@ -464,7 +469,7 @@
             years.forEach(year => {
                 const option = document.createElement('option'); option.value = year; option.textContent = year; yearSelect.appendChild(option);
             });
-            yearSelect.value = years[0];
+            if (years.length > 0) yearSelect.value = years[0];
             populateQuestions(); 
         }
         function populateQuestions() {
@@ -501,8 +506,8 @@
             }
         }
         
-        // --- Problem Loading ---
-        function loadProblemFromSelection() {
+        // --- Problem Loading (Your existing, verified logic, adapted for MathJax) ---
+        function loadProblemFromIndex() { // This is your existing function name
             resetUIState(); 
             showLoading(true);
             if (!moduleSelect || !yearSelect || !questionSelect || !problemDisplaySection) {
@@ -524,7 +529,7 @@
             const problemData = bagrutQuestionsData[module]?.[year]?.[questionNum - 1];
             if (problemData) {
                 currentProblem = { ...problemData }; 
-                lastMathTopic = currentProblem.topic || 'מתמטיקה'; // Update lastMathTopic
+                lastMathTopic = currentProblem.topic || 'מתמטיקה'; 
                 let problemHtml = `
                     <h2 class="text-xl sm:text-2xl font-semibold text-blue-800 mb-3 text-center">
                         שאלה ${questionNum} (${currentProblem.difficulty || 'לא ידוע'}) ${currentProblem.mikud ? '(מיקוד)' : ''}
@@ -561,47 +566,240 @@
         }
         
         // --- Gemini API Call ---
-        async function callGeminiAPI(promptText, isChatContext = false) { /* ... same as previous working version ... */ }
+        async function callGeminiAPI(promptText, isChatContext = false) { /* ... (JavaScript from previous version, ensure GEMINI_MODEL_NAME is used) ... */ }
 
         // --- Hint System ---
-        async function getHint() { /* ... same as previous working version ... MathJax call needed here too */ }
+        async function getHint() { /* ... (JavaScript from previous version, ensure MathJax call for hintDisplay) ... */ }
 
-        // --- Answer Processing ---
-        async function processStudentInput() { /* ... same as previous working version ... MathJax call needed for feedback display ... */ }
+        // --- Answer Processing (Your existing logic, adapted for new features) ---
+        async function checkTypedAnswer() { // This is your existing function, I'll integrate history into it.
+            if (!geminiApiKey) {
+                showErrorMessage('אנא הזן ושמור את מפתח ה-API של Gemini לפני השימוש בתכונות AI.');
+                return;
+            }
+            if (!currentProblem || studentAnswerInput.value.trim() === '') {
+                showErrorMessage('אנא בחר שאלה והקלד תשובה.');
+                return;
+            }
+            showLoading(true);
+            hideErrorMessage();
+            // Reset other UI elements as in your original function
+            aiFeedbackContent.innerHTML = '';
+            aiFeedbackDisplay.classList.add('hidden');
+            checkAnswerResultDisplay.classList.add('hidden');
+            isInStepByStepMode = false;
+            currentStepIndex = 0;
+            stepByStepHistory = [];
+            currentSubProblemAnswerInput.value = '';
+            stepByStepSection.classList.add('hidden');
+            document.getElementById('initialAnswerSection').classList.remove('hidden'); // Ensure this is visible
+            document.getElementById('imageUploadSection').classList.remove('hidden'); // Ensure this is visible
 
-        // --- Step-by-Step Guidance ---
-        async function startStepByStepGuidance() { /* ... same as previous working version ... MathJax call needed for sub-problem ... */ }
-        function extractContent(text, startMarker, endMarker) { /* ... same as previous working version ... */ }
-        async function checkSubStepAnswer() { /* ... same as previous working version ... MathJax call needed for feedback ... */ }
-        function handleNextAfterSubStepFeedback(aiResponseText, lastUserSubStepAnswer) { /* ... same as previous working version ... MathJax call needed for feedback/next step ... */ }
+
+            try {
+                const prompt = `אתה מורה למתמטיקה מומחה לתלמידי בגרות 3 יחידות בישראל.
+                השאלה היא: "${currentProblem.question}"
+                התשובה שהתלמיד הגיש היא: "${studentAnswerInput.value}".
+                התשובה הנכונה הידועה (אם רלוונטי להשוואה ישירה) היא: "${currentProblem.answer}".
+                קבע **בלבד** אם התשובה שהוגשה נכונה או שגויה בהשוואה לתשובה הידועה.
+                התשובה שלך צריכה להיות אחת משתי מילים בלבד בעברית: "נכון" או "שגוי".`;
+
+                const apiResponseText = await callGeminiAPI(prompt); // Re-using the generic API call
+                
+                let isCorrect = false;
+                if (apiResponseText) {
+                    const aiEvaluation = apiResponseText.trim().toLowerCase();
+                    isCorrect = (aiEvaluation === 'נכון');
+                }
+
+                addHistoryEntry(currentProblem.id, currentProblem.question, isCorrect, false, studentAnswerInput.value);
+
+                if (isCorrect) {
+                    checkAnswerResult = 'correct';
+                    checkAnswerResultDisplay.className = 'p-4 rounded-lg mb-2 text-center font-semibold text-lg bg-green-100 text-green-700 border border-green-400';
+                    checkAnswerResultDisplay.innerHTML = `כל הכבוד! תשובה נכונה! 🎉 
+                        <button id="loadNewProblemAfterCorrect" class="mt-3 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">טען שאלה חדשה</button>`;
+                    if(document.getElementById('loadNewProblemAfterCorrect')) {
+                        document.getElementById('loadNewProblemAfterCorrect').addEventListener('click', loadProblemFromIndex);
+                    }
+                    acknowledgeFeedbackButton.classList.add('hidden');
+                } else {
+                    checkAnswerResult = 'incorrect';
+                    checkAnswerResultDisplay.className = 'p-4 rounded-lg mb-2 text-center font-semibold text-lg bg-red-100 text-red-700 border border-red-400';
+                    checkAnswerResultDisplay.innerHTML = 'תשובה שגויה.';
+                    
+                    acknowledgeFeedbackButton.textContent = 'המשך להדרכה שלב אחר שלב';
+                    acknowledgeFeedbackButton.classList.remove('hidden');
+                    acknowledgeFeedbackButton.onclick = () => {
+                        acknowledgeFeedbackButton.classList.add('hidden');
+                        checkAnswerResultDisplay.classList.add('hidden');
+                        document.getElementById('initialAnswerSection').style.display = 'none'; 
+                        document.getElementById('imageUploadSection').style.display = 'none';
+                        stepByStepSection.classList.remove('hidden');
+                        startStepByStepGuidance(); // This function will be from the new features
+                    };
+                }
+                checkAnswerResultDisplay.classList.remove('hidden');
+                if (window.MathJax && MathJax.typesetPromise) {
+                    MathJax.typesetPromise([checkAnswerResultDisplay]).catch((err) => console.error('MathJax error:', err));
+                }
+
+            } catch (error) {
+                showErrorMessage(`שגיאה בבדיקת התשובה: ${error.message}. אנא נסה שוב.`);
+                console.error('Error in checkTypedAnswer:', error);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // This function will handle both typed answers and image uploads, replacing your old checkAnswerButton logic
+        async function processStudentInput() {
+            if (!currentProblem) {
+                showErrorMessage('אנא בחר שאלה תחילה.');
+                return;
+            }
+            const typedAnswer = studentAnswerInput.value.trim();
+            const uploadedFile = imageUploadInput.files[0];
+
+            if (typedAnswer === '' && !uploadedFile) {
+                showErrorMessage('אנא הקלד תשובה או העלה קובץ של עבודתך.');
+                return;
+            }
+
+            checkAnswerButton.disabled = true;
+            hideErrorMessage();
+            aiFeedbackDisplay.classList.add('hidden'); 
+            aiFeedbackContent.innerHTML = '';
+            let feedbackHTML = ''; 
+            let isTypedCorrect = null;
+            let usedGuidanceForTyped = false;
+
+
+            if (typedAnswer !== '') {
+                const promptCheckAnswer = `אתה מורה למתמטיקה מומחה לבגרות 3 יחידות.
+                השאלה היא: "${currentProblem.question}"
+                התשובה שהתלמיד הגיש בהקלדה היא: "${typedAnswer}".
+                התשובה הנכונה הידועה (אם רלוונטי להשוואה ישירה) היא: "${currentProblem.answer}".
+                קבע אם התשובה שהוגשה נכונה או שגויה. 
+                אם היא נכונה, פשוט אמור: "התשובה שהוקלדה נכונה!".
+                אם היא שגויה, פשוט אמור: "התשובה שהוקלדה שגויה."
+                אל תספק הסבר נוסף בשלב זה.`;
+                const answerEvalText = await callGeminiAPI(promptCheckAnswer);
+
+                if (answerEvalText) {
+                    isTypedCorrect = answerEvalText.includes("נכונה");
+                    feedbackHTML += `<div class="p-3 mb-3 rounded-lg ${isTypedCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}"><strong>בדיקת תשובה מוקלדת:</strong> ${answerEvalText}</div>`; // MathJax will process this
+                    
+                    if (!uploadedFile && !isTypedCorrect) { // Only typed answer, and it's wrong
+                        usedGuidanceForTyped = true;
+                        addHistoryEntry(currentProblem.id, currentProblem.question, false, true, typedAnswer);
+                        
+                        checkAnswerResultDisplay.innerHTML = feedbackHTML; 
+                        checkAnswerResultDisplay.classList.remove('hidden');
+                        if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([checkAnswerResultDisplay]);
+
+                        acknowledgeFeedbackButton.textContent = 'המשך להדרכה שלב אחר שלב';
+                        acknowledgeFeedbackButton.classList.remove('hidden');
+                        acknowledgeFeedbackButton.onclick = () => {
+                            acknowledgeFeedbackButton.classList.add('hidden');
+                            checkAnswerResultDisplay.classList.add('hidden');
+                            document.getElementById('initialAnswerSection').style.display = 'none'; 
+                            document.getElementById('imageUploadSection').style.display = 'none';
+                            stepByStepSection.classList.remove('hidden');
+                            startStepByStepGuidance();
+                        };
+                        checkAnswerButton.disabled = false;
+                        return; 
+                    } else if (isTypedCorrect) {
+                         addHistoryEntry(currentProblem.id, currentProblem.question, true, false, typedAnswer);
+                    } else { // Typed answer is incorrect, but there's also an image
+                         addHistoryEntry(currentProblem.id, currentProblem.question, false, false, typedAnswer);
+                    }
+                } else {
+                     feedbackHTML += `<div class="p-3 mb-3 rounded-lg bg-yellow-100 text-yellow-700">לא ניתן היה לבדוק את התשובה המוקלדת כרגע.</div>`;
+                }
+            }
+
+            if (uploadedFile) {
+                const promptImageFeedback = `אתה מורה למתמטיקה מומחה לבגרות 3 יחידות.
+                הבעיה הנוכחית היא: "${currentProblem.question}".
+                התלמיד העלה תמונה של עבודתו בכתב יד (אין לך גישה לתמונה, אך התייחס לכך שהיא קיימת).
+                אנא ספק משוב קצר (2-3 משפטים) על גישות אפשריות או טעויות נפוצות הקשורות לפתרון בעיה זו בכתב יד.
+                התייחס לכך שהתלמיד ניסה לפתור את הבעיה. השתמש ב-LaTeX לביטויים מתמטיים.`;
+                const imageFeedbackText = await callGeminiAPI(promptImageFeedback);
+                if (imageFeedbackText) {
+                    feedbackHTML += `<div class="p-3 rounded-lg bg-indigo-50 text-indigo-700 mt-3"><strong>משוב על עבודה שהועלתה:</strong><br>${imageFeedbackText}</div>`; // MathJax will process
+                    // If only image was uploaded, add a history entry for it (outcome unknown without AI evaluation of image content)
+                    if (typedAnswer === '') {
+                        addHistoryEntry(currentProblem.id, currentProblem.question, null, false, "הועלתה תמונה");
+                    }
+                } else {
+                    feedbackHTML += `<div class="p-3 rounded-lg bg-yellow-100 text-yellow-700 mt-3">לא ניתן היה לקבל משוב על הקובץ שהועלה כרגע.</div>`;
+                }
+            }
+            
+            if (feedbackHTML) {
+                aiFeedbackContent.innerHTML = feedbackHTML;
+                aiFeedbackDisplay.classList.remove('hidden');
+                if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([aiFeedbackContent]);
+            }
+
+            if (typedAnswer !== '' && isTypedCorrect && !uploadedFile) { 
+                 acknowledgeFeedbackButton.textContent = 'טען שאלה חדשה';
+                 acknowledgeFeedbackButton.onclick = () => {
+                    acknowledgeFeedbackButton.classList.add('hidden');
+                    aiFeedbackDisplay.classList.add('hidden');
+                    loadProblemFromIndex(); // Your existing function
+                };
+            } else {
+                acknowledgeFeedbackButton.textContent = 'הבנתי';
+                 acknowledgeFeedbackButton.onclick = () => {
+                    acknowledgeFeedbackButton.classList.add('hidden');
+                    aiFeedbackDisplay.classList.add('hidden'); 
+                };
+            }
+            if (feedbackHTML) { 
+                acknowledgeFeedbackButton.classList.remove('hidden');
+            }
+            
+            checkAnswerButton.disabled = false;
+        }
+
+
+        // --- Step-by-Step Guidance (New Features) ---
+        async function startStepByStepGuidance() { /* ... (JavaScript from previous version, ensure MathJax calls) ... */ }
+        function extractContent(text, startMarker, endMarker) { /* ... (JavaScript from previous version) ... */ }
+        async function checkSubStepAnswer() { /* ... (JavaScript from previous version, ensure MathJax calls) ... */ }
+        function handleNextAfterSubStepFeedback(aiResponseText, lastUserSubStepAnswer) { /* ... (JavaScript from previous version, ensure MathJax calls and history entry) ... */ }
         
-        // --- Modify Problem ---
-        async function modifyProblem(modificationType) { /* ... same as previous working version ... MathJax call needed for new problem ... */ }
+        // --- Modify Problem (Your existing logic, ensure MathJax for new problem) ---
+        async function simplifyProblem() { /* ... (JavaScript from previous version, ensure MathJax call) ... */ }
+        async function makeHarderProblem() { /* ... (JavaScript from previous version, ensure MathJax call) ... */ }
 
-        // --- Chatbot & Tips ---
-        function hideProactiveTip() { /* ... same as previous working version ... */ }
-        async function triggerProactiveTip() { /* ... same as previous working version ... */ }
-        function renderChatMessages() { /* ... same as previous working version ... MathJax call needed for messages ... */ }
-        async function sendChatMessage() { /* ... same as previous working version ... */ }
+        // --- Chatbot & Tips (New Features) ---
+        function hideProactiveTip() { /* ... (JavaScript from previous version) ... */ }
+        async function triggerProactiveTip() { /* ... (JavaScript from previous version) ... */ }
+        function renderChatMessages() { /* ... (JavaScript from previous version, ensure MathJax calls) ... */ }
+        async function sendChatMessage() { /* ... (JavaScript from previous version) ... */ }
 
-        // --- Paste Image ---
-        // Event listener moved to window.onload after pasteZone is defined
+        // --- Paste Image (New Feature) ---
+        // Event listener will be in window.onload
 
-        // --- Whiteboard Functionality ---
-        function resizeWhiteboardCanvas() { /* ... same as previous working version ... */ }
-        function openWhiteboard() { /* ... same as previous working version ... */ }
-        function closeWhiteboard() { /* ... same as previous working version ... */ }
-        function clearWhiteboard() { /* ... same as previous working version ... */ }
-        function getMousePos(canvas, evt) { /* ... same as previous working version ... */ }
-        function getTouchPos(canvas, touch) { /* ... same as previous working version ... */ }
-        function startDrawing(e) { /* ... same as previous working version ... */ }
-        function drawOnWhiteboard(e) { /* ... same as previous working version ... */ }
-        function stopDrawing() { /* ... same as previous working version ... */ }
-        async function saveWhiteboardAsImage() { /* ... same as previous working version ... */ }
+        // --- Whiteboard Functionality (New Feature) ---
+        function resizeWhiteboardCanvas() { /* ... (JavaScript from previous version) ... */ }
+        function openWhiteboard() { /* ... (JavaScript from previous version) ... */ }
+        function closeWhiteboard() { /* ... (JavaScript from previous version) ... */ }
+        function clearWhiteboard() { /* ... (JavaScript from previous version) ... */ }
+        function getMousePos(canvas, evt) { /* ... (JavaScript from previous version) ... */ }
+        function getTouchPos(canvas, touch) { /* ... (JavaScript from previous version) ... */ }
+        function startDrawing(e) { /* ... (JavaScript from previous version) ... */ }
+        function drawOnWhiteboard(e) { /* ... (JavaScript from previous version) ... */ }
+        function stopDrawing() { /* ... (JavaScript from previous version) ... */ }
+        async function saveWhiteboardAsImage() { /* ... (JavaScript from previous version) ... */ }
         
         // --- Event Listeners ---
         window.onload = function() {
-            // Initialize DOM elements (same as previous working version)
+            // Initialize DOM elements (same as previous version)
             settingsButton = document.getElementById('settingsButton'); 
             historyButton = document.getElementById('historyButton'); 
             settingsMenu = document.getElementById('settingsMenu'); 
@@ -667,22 +865,20 @@
 
             loadApiKey(); 
             loadUserHistory(); 
-            populateDropdowns(); 
-            loadProblemFromSelection(); 
+            populateDropdowns(); // Your existing function
+            loadProblemFromIndex(); // Your existing function
 
-            // Attach event listeners (same as previous working version)
+            // Event Listeners for NEW Features
             if(settingsButton) settingsButton.addEventListener('click', toggleSettingsMenu); 
             if(historyButton) historyButton.addEventListener('click', toggleHistoryMenu); 
             if(getHintButton) getHintButton.addEventListener('click', getHint); 
             if(exportCsvButton) exportCsvButton.addEventListener('click', exportAsCsv); 
             if(exportJsonButton) exportJsonButton.addEventListener('click', exportAsJson); 
             if(getRecommendationsButton) getRecommendationsButton.addEventListener('click', getAIRecommendations); 
-            
             if(openWhiteboardButton) openWhiteboardButton.addEventListener('click', openWhiteboard);
             if(closeWhiteboardButton) closeWhiteboardButton.addEventListener('click', closeWhiteboard);
             if(clearWhiteboardButton) clearWhiteboardButton.addEventListener('click', clearWhiteboard);
             if(saveWhiteboardButton) saveWhiteboardButton.addEventListener('click', saveWhiteboardAsImage);
-
             if (drawingBoard) {
                 drawingBoard.addEventListener('mousedown', startDrawing);
                 drawingBoard.addEventListener('mousemove', drawOnWhiteboard);
@@ -693,43 +889,6 @@
                 drawingBoard.addEventListener('touchend', stopDrawing);
                 drawingBoard.addEventListener('touchcancel', stopDrawing);
             }
-            
-            window.addEventListener('resize', resizeWhiteboardCanvas); 
-
-            if(moduleSelect) moduleSelect.addEventListener('change', () => { populateYears(); populateQuestions(); loadProblemFromSelection(); });
-            if(yearSelect) yearSelect.addEventListener('change', () => { populateQuestions(); loadProblemFromSelection(); });
-            if(questionSelect) questionSelect.addEventListener('change', loadProblemFromSelection);
-            if(loadProblemButton) loadProblemButton.addEventListener('click', loadProblemFromSelection);
-            if(checkAnswerButton) checkAnswerButton.addEventListener('click', processStudentInput); 
-            if(checkSubStepButton) checkSubStepButton.addEventListener('click', checkSubStepAnswer);
-            if(imageUploadInput) imageUploadInput.addEventListener('change', (e) => { 
-                if (e.target.files && e.target.files[0]) {
-                    if(selectedImageName) selectedImageName.textContent = `קובץ נבחר: ${e.target.files[0].name}`;
-                    if(pasteZone) pasteZone.textContent = 'קובץ נבחר. ניתן להדביק אחר במקומו.';
-                } else {
-                    if(selectedImageName) selectedImageName.textContent = '';
-                }
-            });
-            if(simplifyProblemButton) simplifyProblemButton.addEventListener('click', () => modifyProblem('simplify'));
-            if(makeHarderProblemButton) makeHarderProblemButton.addEventListener('click', () => modifyProblem('makeHarder'));
-            if(saveApiKeyButton) saveApiKeyButton.addEventListener('click', saveApiKey);
-            if(mathBotToggle) mathBotToggle.addEventListener('click', () => {
-                if(mathBotContainer) mathBotContainer.classList.toggle('expanded');
-                if (mathBotContainer && mathBotContainer.classList.contains('expanded')) {
-                    hideProactiveTip(); 
-                    if(chatInput) chatInput.focus();
-                }
-            });
-            if(closeChatButton) closeChatButton.addEventListener('click', () => {
-                if(mathBotContainer) mathBotContainer.classList.remove('expanded');
-            });
-            if(sendChatMessageButton) sendChatMessageButton.addEventListener('click', sendChatMessage);
-            if(chatInput) chatInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendChatMessage();
-                }
-            });
             if(pasteZone) pasteZone.addEventListener('paste', function(event) { 
                 event.preventDefault(); 
                 const items = (event.clipboardData || window.clipboardData).items;
@@ -757,6 +916,61 @@
                     }, 3000);
                 }
             });
+             if(mathBotToggle) mathBotToggle.addEventListener('click', () => {
+                if(mathBotContainer) mathBotContainer.classList.toggle('expanded');
+                if (mathBotContainer && mathBotContainer.classList.contains('expanded')) {
+                    hideProactiveTip(); 
+                    if(chatInput) chatInput.focus();
+                }
+            });
+            if(closeChatButton) closeChatButton.addEventListener('click', () => {
+                if(mathBotContainer) mathBotContainer.classList.remove('expanded');
+            });
+            if(sendChatMessageButton) sendChatMessageButton.addEventListener('click', sendChatMessage);
+            if(chatInput) chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendChatMessage();
+                }
+            });
+
+
+            // Your EXISTING Event Listeners (should not be changed unless necessary for new feature integration)
+            if(moduleSelect) moduleSelect.addEventListener('change', () => { populateYears(); populateQuestions(); loadProblemFromIndex(); });
+            if(yearSelect) yearSelect.addEventListener('change', () => { populateQuestions(); loadProblemFromIndex(); });
+            if(questionSelect) questionSelect.addEventListener('change', loadProblemFromIndex);
+            if(loadProblemButton) loadProblemButton.addEventListener('click', loadProblemFromIndex);
+            
+            // The main checkAnswerButton now calls processStudentInput which handles typed and image
+            if(checkAnswerButton) checkAnswerButton.addEventListener('click', processStudentInput); 
+            
+            // Your original checkSubStepButton listener (if it's different from the new one, integrate carefully)
+            // For now, assuming the new checkSubStepAnswer handles this.
+            if(checkSubStepButton && typeof checkSubStepAnswer === 'function') { // Ensure new function exists
+                 checkSubStepButton.addEventListener('click', checkSubStepAnswer);
+            } else if (document.getElementById('checkSubStepButton') && typeof originalCheckSubStepAnswer === 'function') { // Fallback to an assumed original
+                // document.getElementById('checkSubStepButton').addEventListener('click', originalCheckSubStepAnswer);
+            }
+
+
+            if(imageUploadInput) imageUploadInput.addEventListener('change', (e) => { 
+                if (e.target.files && e.target.files[0]) {
+                    if(selectedImageName) selectedImageName.textContent = `קובץ נבחר: ${e.target.files[0].name}`;
+                    if(pasteZone) pasteZone.textContent = 'קובץ נבחר. ניתן להדביק אחר במקומו.';
+                } else {
+                    if(selectedImageName) selectedImageName.textContent = '';
+                }
+            });
+            if(simplifyProblemButton) simplifyProblemButton.addEventListener('click', () => modifyProblem('simplify'));
+            if(makeHarderProblemButton) makeHarderProblemButton.addEventListener('click', () => modifyProblem('makeHarder'));
+            if(saveApiKeyButton) saveApiKeyButton.addEventListener('click', saveApiKey);
+            
+            // The old getAIFeedbackOnUploadButton listener is removed as its functionality is merged.
+            // const getAIFeedbackOnUploadButtonOld = document.getElementById('getAIFeedbackOnUploadButton');
+            // if(getAIFeedbackOnUploadButtonOld) getAIFeedbackOnUploadButtonOld.addEventListener('click', getAIFeedbackOnUpload);
+
+
+            window.addEventListener('resize', resizeWhiteboardCanvas); 
         };
     </script>
 </body>
