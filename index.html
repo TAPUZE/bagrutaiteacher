@@ -20,22 +20,23 @@
     <script type="text/javascript" id="MathJax-script" async
         src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
     </script>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body { font-family: 'Inter', sans-serif; overflow-x: hidden; } 
+        /* Styles that were in the HTML but not in style.css, or specific overrides */
+        body { overflow-x: hidden; font-family: 'Inter', sans-serif; } 
         .math-problem-display p { margin-bottom: 0.5rem; }
-        .math-problem-display { font-size: 1.25rem; font-weight: 600; text-align: center; line-height: 1.8; }
-        .rtl-text { direction: rtl; text-align: right; }
+        /* .math-problem-display is in style.css */
+        /* .rtl-text is in style.css */
         
-        .chat-message-user { background-color: #DBEAFE; align-self: flex-end; text-align: right; border-radius: 0.75rem 0.75rem 0.25rem 0.75rem; padding: 0.75rem 1rem; margin-bottom: 0.5rem; max-width: 80%; }
-        .chat-message-ai { background-color: #eef2ff; align-self: flex-start; text-align: right; border-radius: 0.75rem 0.75rem 0.75rem 0.25rem; padding: 1rem 1.25rem; margin-bottom: 0.5rem; border: 1px solid #c7d2fe; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-size: 1.05em; line-height: 1.6; max-width: 80%; }
+        /* Chat message styles are in style.css */
 
         #mathBotToggleContainer { position: fixed; bottom: 2rem; right: 2rem; z-index: 1000; display: flex; flex-direction: column-reverse; align-items: center; }
         #mathBotToggle { width: 4rem; height: 4rem; background-color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s ease-in-out; }
         #mathBotToggle:hover { transform: scale(1.1); background-color: #4338ca; }
         #mathBotToggle svg { width: 2rem; height: 2rem; }
-        #proactiveTipBubble { background-color: #6366f1; color: white; padding: 0.5rem 1rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06); margin-bottom: 0.5rem; max-width: 250px; font-size: 0.875rem; text-align: center; opacity: 0; transform: translateY(10px) scale(0.95); visibility: hidden; transition: opacity 0.3s ease-out,transform 0.3s ease-out,visibility 0.3s linear; pointer-events: none; }
+        #proactiveTipBubble { background-color: #6366f1; color: white; padding: 0.5rem 1rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06); margin-bottom: 0.5rem; max-width: 250px; font-size: 0.875rem; text-align: center; opacity: 0; transform: translateY(10px) scale(0.95); visibility: hidden; transition: opacity 0.3s ease-out,transform 0.3s ease-out,visibility 0.3s linear; pointer-events: none; z-index: 1001; /* Ensure tip is above toggle but can be below chat */ }
         #proactiveTipBubble.visible { opacity: 1; transform: translateY(0) scale(1); visibility: visible; }
-        #mathBotContainer { position: fixed; bottom: calc(2rem + 4rem + 1rem); right: 2rem; width: 360px; height: 550px; max-height: calc(100vh - 8rem); background-color: white; border-radius: 1rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1),0 10px 10px -5px rgba(0,0,0,0.04); z-index: 999; display: flex; flex-direction: column; overflow: hidden; transform: translateY(100%) scale(0.8); opacity: 0; visibility: hidden; transition: transform 0.3s cubic-bezier(0.68,-0.55,0.27,1.55),opacity 0.3s ease-out,visibility 0.3s linear; }
+        #mathBotContainer { position: fixed; bottom: calc(2rem + 4rem + 1rem); right: 2rem; width: 360px; height: 550px; max-height: calc(100vh - 8rem); background-color: white; border-radius: 1rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1),0 10px 10px -5px rgba(0,0,0,0.04); z-index: 1050; /* Higher z-index for expanded chat */ display: flex; flex-direction: column; overflow: hidden; transform: translateY(100%) scale(0.8); opacity: 0; visibility: hidden; transition: transform 0.3s cubic-bezier(0.68,-0.55,0.27,1.55),opacity 0.3s ease-out,visibility 0.3s linear; }
         #mathBotContainer.expanded { transform: translateY(0) scale(1); opacity: 1; visibility: visible; }
         #chatHeader { background-color: #4f46e5; color: white; padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; border-top-left-radius: 1rem; border-top-right-radius: 1rem; }
         #chatHeader h3 { font-weight: 600; }
@@ -67,17 +68,9 @@
         #openWhiteboardButton { display: inline-flex; align-items: center; gap: 0.5rem; }
     </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 sm:p-8 flex flex-col items-center font-sans text-gray-800">
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 sm:p-8 flex flex-col items-center font-sans text-gray-800 rtl-text">
 
-    <svg width="0" height="0" style="position:absolute; overflow:hidden;">
-        <symbol id="graph-hanion-II" viewBox="0 0 400 250"> <rect x="0" y="0" width="400" height="250" fill="#FFFFFF" stroke="#000" stroke-width="1"/> <line x1="50" y1="220" x2="380" y2="220" stroke="#000" stroke-width="1.5"/> <line x1="50" y1="220" x2="50" y2="20" stroke="#000" stroke-width="1.5"/> <text x="50" y="235" font-family="sans-serif" font-size="10" text-anchor="middle">0</text> <text x="80" y="235" font-family="sans-serif" font-size="10" text-anchor="middle">1</text> <text x="110" y="235" font-family="sans-serif" font-size="10" text-anchor="middle">2</text> <text x="140" y="235" font-family="sans-serif" font-size="10" text-anchor="middle">3</text> <text x="170" y="235" font-family="sans-serif" font-size="10" text-anchor="middle">4</text> <text x="200" y="235" font-family="sans-serif" font-size="10" text-anchor="middle">5</text> <text x="230" y="235" font-family="sans-serif" font-size="10" text-anchor="middle">6</text> <text x="260" y="235" font-family="sans-serif" font-size="10" text-anchor="middle">7</text> <text x="290" y="235" font-family="sans-serif" font-size="10" text-anchor="middle">8</text> <text x="320" y="235" font-family="sans-serif" font-size="10" text-anchor="middle">9</text> <text x="350" y="235" font-family="sans-serif" font-size="10" text-anchor="middle">10</text> <text x="380" y="235" font-family="sans-serif" font-size="10" text-anchor="middle">11</text> <text x="380" y="210" font-family="sans-serif" font-size="12" text-anchor="end">זמן החניה (שעות)</text> <text x="40" y="205" font-family="sans-serif" font-size="10" text-anchor="end">15</text> <text x="40" y="175" font-family="sans-serif" font-size="10" text-anchor="end">30</text> <text x="40" y="145" font-family="sans-serif" font-size="10" text-anchor="end">45</text> <text x="40" y="115" font-family="sans-serif" font-size="10" text-anchor="end">60</text> <text x="40" y="85" font-family="sans-serif" font-size="10" text-anchor="end">75</text> <text x="20" y="30" font-family="sans-serif" font-size="12" text-anchor="end">התשלום (שקלים)</text> <line x1="50" y1="205" x2="140" y2="205" stroke="blue" stroke-width="2"/> <circle cx="50" cy="205" r="3" fill="black"/> <circle cx="140" cy="205" r="3" fill="black"/> <circle cx="140" cy="175" r="3" fill="white" stroke="blue" stroke-width="1.5"/> <line x1="140" y1="175" x2="260" y2="175" stroke="blue" stroke-width="2"/> <circle cx="140" cy="175" r="3" fill="black"/> <circle cx="260" cy="175" r="3" fill="black"/> <circle cx="260" cy="85" r="3" fill="white" stroke="blue" stroke-width="1.5"/> <line x1="260" y1="85" x2="380" y2="85" stroke="blue" stroke-width="2"/> <circle cx="260" cy="85" r="3" fill="black"/> <circle cx="380" cy="85" r="3" fill="black"/> </symbol>
-        <symbol id="מקבילית-ABCD" viewBox="0 0 400 250"> <rect x="0" y="0" width="400" height="250" fill="#FFFFFF" stroke="#000" stroke-width="1"/> <line x1="50" y1="220" x2="380" y2="220" stroke="#000" stroke-width="1.5"/> <line x1="50" y1="220" x2="50" y2="20" stroke="#000" stroke-width="1.5"/> <polygon points="70,220 120,80 320,80 270,220" fill="none" stroke="black" stroke-width="2"/> <line x1="70" y1="220" x2="320" y1="80" stroke="gray" stroke-dasharray="5,5" stroke-width="1.5"/> <text x="60" y="230" font-family="sans-serif" font-size="14">A</text> <text x="110" y="70" font-family="sans-serif" font-size="14">B</text> <text x="330" y="70" font-family="sans-serif" font-size="14">C</text> <text x="260" y="230" font-family="sans-serif" font-size="14">D</text> <text x="40" y="30" font-family="sans-serif" font-size="12">y</text> <text x="390" y="210" font-family="sans-serif" font-size="12">x</text> </symbol>
-        <symbol id="משולש-שווה-שוקיים" viewBox="0 0 400 250"> <rect x="0" y="0" width="400" height="250" fill="#FFFFFF" stroke="#000" stroke-width="1"/> <polygon points="200,50 100,200 300,200" fill="none" stroke="black" stroke-width="2"/> <line x1="100" y1="200" x2="250" y1="125" stroke="gray" stroke-dasharray="5,5" stroke-width="1.5"/> <rect x="245" y="125" width="8" height="8" stroke="black" fill="none" stroke-width="1"/> <text x="195" y="40" font-family="sans-serif" font-size="14">A</text> <text x="90" y="215" font-family="sans-serif" font-size="14">B</text> <text x="310" y="215" font-family="sans-serif" font-size="14">C</text> <text x="255" y="115" font-family="sans-serif" font-size="14">D</text> <path d="M290 200 A10 10 0 0 0 290 190 L300 200 Z" fill="none" stroke="black" stroke-width="1"/> <text x="285" y="195" font-family="sans-serif" font-size="10">65°</text> </symbol>
-        <symbol id="פרבולה" viewBox="0 0 400 250"> <rect x="0" y="0" width="400" height="250" fill="#FFFFFF" stroke="#000" stroke-width="1"/> <line x1="50" y1="220" x2="380" y2="220" stroke="#000" stroke-width="1.5"/> <line x1="50" y1="220" x2="50" y2="20" stroke="#000" stroke-width="1.5"/> <path d="M 125 220 Q 225 60 325 220" fill="none" stroke="blue" stroke-width="2"/> <circle cx="125" cy="220" r="3" fill="black"/> <text x="120" y="235" font-family="sans-serif" font-size="14">A</text> <circle cx="325" cy="220" r="3" fill="black"/> <text x="320" y="235" font-family="sans-serif" font-size="14">B</text> <circle cx="225" cy="60" r="3" fill="black"/> <text x="220" y="50" font-family="sans-serif" font-size="14">C</text> <text x="40" y="30" font-family="sans-serif" font-size="12">y</text> <text x="390" y="210" font-family="sans-serif" font-size="12">x</text> </symbol>
-        <symbol id="parabola-horizontal-line-2024B" viewBox="0 0 400 250"> <rect x="0" y="0" width="400" height="250" fill="#FFFFFF" stroke="#000" stroke-width="1"/> <line x1="50" y1="220" x2="380" y2="220" stroke="#000" stroke-width="1.5"/> <line x1="50" y1="220" x2="50" y2="20" stroke="#000" stroke-width="1.5"/> <path d="M 50 180 C 100 50, 200 20, 300 50 S 350 80, 380 180" fill="none" stroke="blue" stroke-width="2"/> <line x1="50" y1="100" x2="380" y2="100" stroke="gray" stroke-width="1.5"/> <circle cx="100" cy="100" r="3" fill="black"/> <text x="95" y="90" font-family="sans-serif" font-size="14">A</text> <circle cx="300" cy="100" r="3" fill="black"/> <text x="295" y="90" font-family="sans-serif" font-size="14">B</text> <circle cx="200" cy="200" r="3" fill="black"/> <text x="195" y="215" font-family="sans-serif" font-size="14">D</text> <line x1="200" y1="100" x2="200" y1="200" stroke="gray" stroke-dasharray="3,3" stroke-width="1"/> <rect x="195" y="100" width="8" height="8" stroke="black" fill="none" stroke-width="1"/> <text x="40" y="30" font-family="sans-serif" font-size="12">y</text> <text x="390" y="210" font-family="sans-serif" font-size="12">x</text> </symbol>
-        </svg>
-
-    <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg p-6 sm:p-8 border border-gray-200 rtl-text mb-24 relative"> 
+    <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg p-6 sm:p-8 border border-gray-200 mb-24 relative"> 
         <button id="settingsButton" class="top-button" aria-label="הגדרות">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.646.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 1.905c-.007.379.137.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.333.183-.582.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.759 6.759 0 010-1.905c.007-.379-.137-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
         </button>
@@ -98,13 +91,15 @@
                 <p id="apiKeyStatus" class="mt-2 text-sm text-center text-green-700 hidden"></p>
             </div>
         </div>
+
         <div id="historyMenu" class="collapsible-menu">
             <div class="bg-teal-50 rounded-lg p-5 border border-teal-200">
                  <h2 class="text-xl sm:text-2xl font-semibold text-teal-800 mb-3 text-center">היסטוריה ודוחות</h2>
                  <div id="historyPanelContent" class="bg-white p-3 rounded border border-gray-200 mb-4 text-sm">
                     אין היסטוריה עדיין.
                  </div>
-                 <div id="aiRecommendationsContent" class="hidden text-sm"></div>
+                 <div id="aiRecommendationsContent" class="hidden text-sm">
+                    </div>
                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <button id="exportCsvButton" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg">ייצא כ-CSV</button>
                     <button id="exportJsonButton" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg">ייצא כ-JSON</button>
@@ -137,15 +132,14 @@
                         שאלה:
                     </label>
                     <select id="questionSelect" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
-                        </select>
-                </div>
+                        </select>                </div>
             </div>
-            <button id="loadProblemButton" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
-                טען שאלה נבחרת
+            <button id="loadProblemButton" class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105 animate-pulse">
+                טען שאלה נבחרת ▶
             </button>
         </div>
 
-        <div id="problemDisplaySection" class="bg-blue-50 rounded-lg p-5 mb-6 border border-blue-200">
+        <div id="problemDisplaySection" class="bg-blue-50 rounded-lg p-5 mb-6 border border-blue-200 min-h-[100px]">
             </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -166,15 +160,19 @@
                     <button id="getHintButton" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition w-full sm:w-auto">
                         💡 קבל רמז
                     </button>
-                    <div id="hintDisplay" class="mt-3 p-3 bg-orange-100 text-orange-800 rounded-lg hidden text-center"></div>
+                    <div id="hintDisplay" class="mt-3 p-3 bg-orange-100 text-orange-800 rounded-lg hidden text-center">
+                        </div>
                 </div>
             </div>
         </div>
-         <button id="checkAnswerButton" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg mb-6">בדוק תשובה / קבל משוב</button>
+        <button id="checkAnswerButton" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg mb-2">בדוק תשובה / קבל משוב</button>
+        <div class="flex flex-col sm:flex-row justify-center gap-2 mt-2">
+            <button id="acknowledgeFeedbackButton" class="hidden w-full sm:w-auto bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg">המשך</button>
+            <button id="tryAgainSelfButton" class="hidden w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg">אנסה שוב בעצמי</button>
+        </div>
         
         <div id="checkAnswerResultDisplay" class="p-4 rounded-lg mb-6 text-center font-semibold text-lg hidden">
             </div>
-        <button id="acknowledgeFeedbackButton" class="hidden mt-2 w-full sm:w-auto mx-auto bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg">הבנתי, המשך</button>
 
         <div id="stepByStepSection" class="bg-yellow-50 rounded-lg p-5 mb-6 border border-yellow-200 hidden">
             <h2 class="text-xl sm:text-2xl font-semibold text-yellow-800 mb-3 text-center">שלב <span id="currentStepNumber">1</span></h2>
@@ -189,12 +187,14 @@
             <button id="simplifyProblemButton" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg">פשט בעיה</button>
             <button id="makeHarderProblemButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg">הפוך לקשה יותר</button>
         </div>
+
         <div id="loadingIndicator" class="flex items-center justify-center mb-4 text-indigo-600 hidden"> 
             <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24"> <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle> <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path> </svg> מעבד... 
         </div>
         <div id="errorMessageDisplay" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-4 hidden" role="alert"> 
             <strong class="font-bold">שגיאה!</strong> <span id="errorMessageText" class="block sm:inline"></span> 
         </div>
+
         <div id="aiFeedbackDisplay" class="bg-purple-50 rounded-lg p-5 border border-purple-200 mt-6 hidden"> 
             <h2 class="text-xl sm:text-2xl font-semibold text-purple-800 mb-3 text-center">משוב AI</h2> 
             <div id="aiFeedbackContent" class="text-gray-700 leading-relaxed">
@@ -235,743 +235,6 @@
         </div>
     </div>
 
-    <script>
-        // Global state variables
-        let geminiApiKey = '';
-        let currentProblem = null;
-        // let isLoading = false; // Managed by UI classes
-        // let errorMessage = ''; // Managed by UI elements
-        let checkAnswerResult = null; 
-
-        let isInStepByStepMode = false;
-        let currentStepIndex = 0;
-        let stepByStepHistory = []; 
-        let currentSubProblemQuestionText = ''; 
-        
-        let chatMessages = []; 
-        // let isChatLoading = false; // Managed by button disabling
-        let lastMathTopic = 'מתמטיקה'; 
-        let userHistory = []; 
-
-        // DOM Elements - Declared with let, will be assigned in window.onload
-        let settingsButton, historyButton, settingsMenu, historyMenu, historyPanelContent,
-            exportCsvButton, exportJsonButton, getRecommendationsButton, aiRecommendationsContent,
-            getHintButton, hintDisplay, apiKeyInput, saveApiKeyButton, apiKeyStatus,
-            moduleSelect, yearSelect, questionSelect, loadProblemButton, problemDisplaySection,
-            studentAnswerInput, checkAnswerButton, checkAnswerResultDisplay, acknowledgeFeedbackButton,
-            stepByStepSection, currentStepNumberSpan, currentSubProblemQuestionDiv,
-            currentSubProblemAnswerInput, checkSubStepButton, imageUploadInput, pasteZone,
-            selectedImageName, simplifyProblemButton, makeHarderProblemButton, loadingIndicator,
-            errorMessageDisplay, errorMessageText, aiFeedbackDisplay, aiFeedbackContent,
-            mathBotToggleContainer, mathBotToggle, proactiveTipBubble, mathBotContainer,
-            closeChatButton, chatMessagesDisplay, chatInput, sendChatMessageButton,
-            openWhiteboardButton, whiteboardModal, drawingBoard, saveWhiteboardButton,
-            clearWhiteboardButton, closeWhiteboardButton, whiteboardCtx,
-            isDrawingOnWhiteboard = false, lastX, lastY;
-
-
-        const GEMINI_MODEL_NAME = 'gemini-1.5-flash-latest'; 
-        
-        // --- BAGRUT QUESTIONS DATA ---
-        // THIS IS YOUR EXISTING DATA STRUCTURE - PLEASE POPULATE IT ACCURATELY
-        const bagrutQuestionsData = {
-            '35182': { 
-                '2025': [ 
-                    { 
-                        id: '35182-2025ח-1', 
-                        question: "המשכורת של יואב הייתה גדולה מן המשכורת של דנה ב־ 1,740 שקלים. המשכורת של דנה עלתה ב־15%, והמשכורת של יואב נשארה ללא שינוי. לאחר ההעלאה הייתה המשכורת של דנה שווה למשכורת של יואב. נסמן בי $x$ את המשכורת של דנה לפני ההעלאה. א. הביעו באמצעות $x$ את המשכורת של יואב. ב. מצאו את המשכורת של דנה לפני ההעלאה.", 
-                        answer: "א. $x+1740$  ב. 11600 שקלים", 
-                        topic: "אלגברה - בעיות מילוליות", 
-                        difficulty: "קל", 
-                        mikud: false, 
-                        imageUrl: null 
-                    },
-                    {
-                        id: '35182-2025ח-2',
-                        question: "בכל יום מר ישראלי נוהג מביתו למרכז העיר במכוניתו הפרטית. הוא חונה באחד משני חניונים: חניון I או חניון II. בחניון I התשלום אינו תלוי בזמן החניה, והוא 60 שקלים ליום. בחניון II התשלום תלוי בזמן החניה, לפי שעות. הגרף שלפניכם מתאר את הקשר בין מספר שעות החניה ובין התשלום בעבור החניה בחניון II. (ראו סרטוט בבחינה המקורית). א. ביום ראשון חנה מר ישראלי בחניון II בשעה 9:00 בבוקר, ועזב את החניון בשעה 13:00 בצוהריים. כמה שילם מר ישראלי בעבור החניה ביום ראשון? ב. ביום שני תכנן מר ישראלי להישאר במרכז העיר 8 שעות, ולכן הוא החליט לחנות בחניון שבו התשלום בעבור חניה של 8 שעות נמוך יותר. כמה שילם מר ישראלי בעבור החניה הזאת? ג. כמה שעות לכל היותר יוכל מר ישראלי לחנות, אם יש לו 50 שקלים בלבד?",
-                        answer: "א. 45 שקלים ב. 60 שקלים ג. 6 שעות",
-                        topic: "פונקציות וגרפים",
-                        difficulty: "בינוני",
-                        mikud: false,
-                        imageUrl: "#graph-hanion-II" 
-                    },
-                     {
-                        id: '35182-2025ח-3',
-                        question: "בסדרה חשבונית האיבר השלישי הוא 4, והאיבר החמישי הוא 9. א. (1) מצאו את הפרש הסדרה. (2) מצאו את האיבר הראשון בסדרה. האיבר האחרון בסדרה הוא 39. ב. מצאו את מספר האיברים בסדרה. ג. מצאו את סכום כל איברי הסדרה.",
-                        answer: "א. (1) $d=2.5$ (2) $a_1=-1$ ב. $n=16$ ג. $S_n=304$",
-                        topic: "סדרות חשבוניות",
-                        difficulty: "בינוני",
-                        mikud: false,
-                        imageUrl: null
-                    },
-                    // Add questions 4, 5, 6 for 35182 - 2025 חורף
-                ],
-                '2024': [ 
-                    { 
-                        id: '35182-2024ק-1', 
-                        question: "בחנות רהיטים מסוימת המחיר של שולחן אחד ו־ 6 כיסאות הוא 3,980 שקלים, והמחיר של שולחן אחד ו־2 כיסאות הוא 2,860 שקלים. א. חשבו את המחיר של שולחן אחד ואת המחיר של כיסא אחד. ב. מנהל החנות החליט להעלות את המחיר של השולחן ב־ 10% ולתת הנחה של 15% על המחיר של כיסא. נדב קנה בחנות זו שולחן אחד ו־ 8 כיסאות לאחר השינוי במחירים. מצאו כמה שילם נדב סך הכול עבור הרהיטים שקנה.", 
-                        answer: "א. שולחן: 2580 שקלים, כיסא: 230 שקלים ב. 4412 שקלים", 
-                        topic: "אלגברה - מערכת משוואות", 
-                        difficulty: "בינוני", 
-                        mikud: false, 
-                        imageUrl: null 
-                    },
-                     { 
-                        id: '35182-2024קמב-1', 
-                        question: "המחיר לכרטיס כניסה למוזאון הוא 34 שקלים למבוגר ו־ 20 שקלים לילד. למוזאון הגיעה קבוצה של 50 מבקרים, ובה מבוגרים וילדים. העלות של כל כרטיסי הכניסה של קבוצת המבקרים הייתה 1,182 שקלים סך הכול. א. מצאו כמה מבוגרים היו בקבוצה. ב. בעת התשלום בקופה קיבלה הקבוצה הנחה של 18% עבור כרטיס כניסה לכל ילד (המחיר של כרטיס למבוגר לא השתנה). מצאו כמה שילמה קבוצת המבקרים סך הכול בעבור כרטיסי הכניסה.", 
-                        answer: "א. 13 מבוגרים ב. 1044.4 שקלים", 
-                        topic: "אלגברה - בעיות מילוליות", 
-                        difficulty: "בינוני", 
-                        mikud: false, 
-                        imageUrl: null 
-                    },
-                    // Add more questions for 35182 - 2024 (both terms)
-                ]
-            },
-            '35381': { 
-                '2025': [ 
-                    { 
-                        id: '35381-2025ח-1', 
-                        question: "נתונה פרבולה שמשוואתה $y=-4x^{2}+28x-33$. A ו B הן נקודות החיתוך של הפרבולה עם ציר ה־ $x$, כמתואר בסרטוט. א. מצאו את שיעורי הנקודות A ו־B. הנקודה C היא קודקוד הפרבולה. ב. מצאו את שיעורי הנקודה C. ג. חשבו את שטח המשולש ABC. ד. (1) כתבו ערך כלשהו של $x$ בנקודה שבה הפרבולה שלילית. (2) מצאו את שיעור ה־ $y$ של נקודה זו.", 
-                        answer: "א. $A(1.5,0), B(5.5,0)$ ב. $C(3.5,16)$ ג. 32 יח\"ר ד. (1) לדוגמה $x=0$ (2) $y=-33$", 
-                        topic: "אלגברה - פרבולה", 
-                        difficulty: "בינוני", 
-                        mikud: false, 
-                        imageUrl: "#פרבולה" 
-                    },
-                    // Add more questions for 35381 - 2025 חורף
-                ],
-                '2024': [ 
-                     { 
-                        id: '35381-2024קמב-1', 
-                        question: "נתונה פרבולה שמשוואתה $y=x^{2}-6x$. הישר $y=16$ חותך את הפרבולה בנקודות $B\\text{ ו } A$, כמתואר בסרטוט שלפניכם. א. מצאו את שיעורי הנקודות $A \\text{ ו } B$. הנקודה D היא קודקוד הפרבולה. ב. מצאו את שיעורי הנקודה D. ג. מהו אורך הגובה לצלע AB במשולש ABD ? ד. מצאו את שטח המשולש ABD.", 
-                        answer: "א. $A(-2,16), B(8,16)$ ב. $D(3,-9)$ ג. 25 ד. 125 יח\"ר", 
-                        topic: "אלגברה - פרבולה", 
-                        difficulty: "בינוני", 
-                        mikud: false, 
-                        imageUrl: "#parabola-horizontal-line-2024B"},
-                    // Add more questions for 35381 - 2024 קיץ מועד ב
-                ]
-            },
-            '35382': { 
-                '2025': [ 
-                    { 
-                        id: '35382-2025ח-1', 
-                        question: "בחנות בגדים מסוימת המחיר של מעיל גבוה ב- 72 שקלים מן המחיר של חולצה. בחנות הכריזו על מבצע של 15% הנחה על המחיר של חולצה (המחיר של מעיל לא השתנה). המחיר של חולצה אחת במבצע ושל מעיל אחד הוא 175.6 שקלים סך הכול. א. (1) מצאו את המחיר של חולצה לפני ההנחה. (2) מצאו את המחיר של חולצה במבצע. ב. לקראת טיול של שכבת י\"א, קנתה רותם בחנות 60 פריטים: חלקם מעילים והשאר חולצות במבצע. היא שילמה 4,383.6 שקלים סך הכול. מצאו את מספר החולצות שקנתה רותם. ג. נדב קנה בחנות 4 מעילים. כאשר הגיע נדב לקופה כדי לשלם, התברר לו שהוא זכאי להנחה על המחיר של המעילים, כיוון שהוא חבר מועדון. נדב שילם 448 שקלים סך הכול. מצאו את אחוז ההנחה שקיבל נדב על מחיר המעילים.", 
-                        answer: "א. (1) 68 שקלים (2) 57.8 שקלים ב. 36 חולצות ג. 20%", 
-                        topic: "אלגברה - בעיות מילוליות ואחוזים", 
-                        difficulty: "בינוני", 
-                        mikud: false, 
-                        imageUrl: null 
-                    },
-                    // Add more questions for 35382 - 2025 חורף
-                ],
-                '2024': [ 
-                    { 
-                        id: '35382-2024ק-1', 
-                        question: "בחברת נסיעות מציעים חבילת נופש הכוללת טיסה ולינה במלון. המחיר של חבילת הנופש בחברת הנסיעות הוא 3,760 שקלים. בחבילה זו מחיר הלינה במלון גבוה ב־ 35% ממחיר הטיסה. א. מצאו מהו מחיר הטיסה בחבילת הנופש בחברה זו. ב. יוסי, סוכן נסיעות, הזמין כמה חבילות נופש בחברת הנסיעות. הוא קיבל הנחה של 15% על מחיר הטיסה בכל אחת מחבילות הנופש שהזמין (מחיר הלינה במלון לא השתנה). כמה שילם יוסי בעבור חבילת נופש אחת לאחר ההנחה? ג. מיכאל, גם הוא סוכן נסיעות, הזמין חבילות נופש בחברת נסיעות אחרת. הוא שילם 4,400 שקלים בעבור כל אחת מחבילות הנופש שהזמין. מספר החבילות שהזמין יוסי גדול ב־32 ממספר החבילות שהזמין מיכאל. הסכום ששילם יוסי בעבור כל החבילות שהזמין שווה לסכום ששילם מיכאל בעבור כל החבילות שהזמין. כמה חבילות נופש הזמין מיכאל?", 
-                        answer: "א. 1600 שקלים ב. 3520 שקלים ג. 40 חבילות", 
-                        topic: "אלגברה - אחוזים ובעיות מילוליות", 
-                        difficulty: "קשה", 
-                        mikud: false, 
-                        imageUrl: null 
-                    },
-                     { 
-                        id: '35382-2024קמב-1', 
-                        question: "המחיר של כרטיס כניסה לבריכה עבור מבוגר גדול ב־ 9 שקלים מן המחיר של כרטיס כניסה עבור ילד. רחלי קנתה 4 כרטיסי כניסה למבוגרים ו־ 17 כרטיסי כניסה לילדים. נסמן בי $x$ את המחיר של כרטיס כניסה לילד. א. הביעו באמצעות $x$ את המחיר הכולל ששילמה רחלי עבור כרטיסי הכניסה לבריכה. ב. אופיר קנה גם הוא כרטיסי כניסה לבריכה. הוא קנה 7 כרטיסי כניסה למבוגרים ו־ 30 כרטיסי כניסה לילדים. אופיר קיבל הנחה של 15% על המחיר של כרטיס כניסה לילד (המחיר של כרטיס כניסה למבוגר לא השתנה). הסכום הכולל ששילמו רחלי ואופיר יחד עבור כל הכרטיסים הוא 2,399.5 שקלים. מצאו את $x$. ג. מצאו בכמה אחוזים גבוה יותר הסכום ששילם אופיר עבור כל הכרטיסים שקנה מן הסכום ששילמה רחלי עבור כל הכרטיסים שקנתה (בתשובתכם רשמו שתי ספרות אחרי הנקודה העשרונית).", 
-                        answer: "א. $21x+36$ ב. $x=35$ שקלים ג. 50.59%", 
-                        topic: "אלגברה - בעיות מילוליות", 
-                        difficulty: "קשה", 
-                        mikud: false, 
-                        imageUrl: null 
-                    },
-                    // Add more questions for 35382 - 2024 (both terms)
-                ]
-            }
-        };
-        
-        // --- History Management ---
-        function loadUserHistory() { /* ... (JavaScript from previous version) ... */ }
-        function saveUserHistory() { /* ... (JavaScript from previous version) ... */ }
-        function addHistoryEntry(problemId, questionText, isCorrect, usedStepByStep, typedAnswer = "") { /* ... (JavaScript from previous version) ... */ }
-        function displayUserHistory() { /* ... (JavaScript from previous version) ... */ }
-
-        // --- Export Functions ---
-        function downloadData(filename, data, type) { /* ... (JavaScript from previous version) ... */ }
-        function exportAsCsv() { /* ... (JavaScript from previous version) ... */ }
-        function exportAsJson() { /* ... (JavaScript from previous version) ... */ }
-        
-        // --- AI Recommendations ---
-        async function getAIRecommendations() { /* ... (JavaScript from previous version) ... */ }
-
-        // --- Utility Functions (Continued) ---
-        function showLoading(show) { if(loadingIndicator) loadingIndicator.classList.toggle('hidden', !show); }
-        function showErrorMessage(message) { if(errorMessageText && errorMessageDisplay) { errorMessageText.textContent = message; errorMessageDisplay.classList.remove('hidden'); }}
-        function hideErrorMessage() { if(errorMessageDisplay) errorMessageDisplay.classList.add('hidden'); if(errorMessageText) errorMessageText.textContent = ''; }
-        
-        function resetUIState() { /* ... (JavaScript from previous version, ensure MathJax calls are considered if UI elements with math are cleared/reset) ... */ }
-
-        // --- API Key & Settings ---
-        function toggleSettingsMenu() { if(settingsMenu) settingsMenu.classList.toggle('expanded'); if(historyMenu && historyMenu.classList.contains('expanded')) historyMenu.classList.remove('expanded'); }
-        function toggleHistoryMenu() { if(historyMenu) historyMenu.classList.toggle('expanded'); if(settingsMenu && settingsMenu.classList.contains('expanded')) settingsMenu.classList.remove('expanded');} 
-        function loadApiKey() { /* ... (JavaScript from previous version) ... */ }
-        function saveApiKey() { /* ... (JavaScript from previous version) ... */ }
-
-        // --- Dropdowns (Your existing, verified logic) ---
-        function populateDropdowns() {
-            if (!moduleSelect) return;
-            moduleSelect.innerHTML = '';
-            const modulesInData = Object.keys(bagrutQuestionsData).sort();
-            if (modulesInData.length === 0) {
-                const option = document.createElement('option');
-                option.value = ""; option.textContent = "אין מודולים זמינים";
-                moduleSelect.appendChild(option);
-                moduleSelect.disabled = true;
-                if(yearSelect) yearSelect.disabled = true;
-                if(questionSelect) questionSelect.disabled = true;
-                if(loadProblemButton) loadProblemButton.disabled = true;
-                if(problemDisplaySection) problemDisplaySection.innerHTML = '<p class="text-center text-gray-500">אנא הוסף שאלות לקובץ התבנית.</p>';
-                return;
-            }
-            moduleSelect.disabled = false;
-            if(loadProblemButton) loadProblemButton.disabled = false;
-
-            modulesInData.forEach(module => { 
-                const option = document.createElement('option'); option.value = module; option.textContent = `שאלון ${module}`; moduleSelect.appendChild(option);
-            });
-            if (modulesInData.length > 0) moduleSelect.value = modulesInData[0]; 
-            populateYears();
-        }
-        function populateYears() {
-            if (!yearSelect || !moduleSelect) return;
-            yearSelect.innerHTML = '';
-            const selectedModule = moduleSelect.value;
-            if (!selectedModule || !bagrutQuestionsData[selectedModule]) {
-                 const option = document.createElement('option');
-                option.value = ""; option.textContent = "בחר מודול תחילה";
-                yearSelect.appendChild(option);
-                yearSelect.disabled = true;
-                if(questionSelect) questionSelect.disabled = true;
-                return;
-            }
-            yearSelect.disabled = false;
-
-            const years = Object.keys(bagrutQuestionsData[selectedModule] || {}).sort((a, b) => parseInt(b) - parseInt(a)); 
-            if (years.length === 0) {
-                const option = document.createElement('option');
-                option.value = ""; option.textContent = "אין שנים למודול זה";
-                yearSelect.appendChild(option);
-                yearSelect.disabled = true;
-                if(questionSelect) questionSelect.disabled = true;
-                return;
-            }
-
-            years.forEach(year => {
-                const option = document.createElement('option'); option.value = year; option.textContent = year; yearSelect.appendChild(option);
-            });
-            if (years.length > 0) yearSelect.value = years[0];
-            populateQuestions(); 
-        }
-        function populateQuestions() {
-            if (!questionSelect || !moduleSelect || !yearSelect) return;
-            questionSelect.innerHTML = '';
-            const selectedModuleVal = moduleSelect.value;
-            const selectedYearVal = yearSelect.value;
-            
-            if (!selectedModuleVal || !selectedYearVal || !bagrutQuestionsData[selectedModuleVal] || !bagrutQuestionsData[selectedModuleVal][selectedYearVal]) {
-                const option = document.createElement('option');
-                option.value = ""; option.textContent = "בחר שנה תחילה";
-                questionSelect.appendChild(option);
-                questionSelect.disabled = true;
-                return;
-            }
-            
-            const questionsForYear = bagrutQuestionsData[selectedModuleVal][selectedYearVal] || [];
-            
-            if (questionsForYear.length > 0) {
-                questionSelect.disabled = false;
-                questionsForYear.forEach((q, index) => {
-                    const option = document.createElement('option'); 
-                    option.value = (index + 1).toString(); 
-                    option.textContent = `שאלה ${index + 1}`; 
-                    questionSelect.appendChild(option);
-                });
-                questionSelect.value = "1"; 
-            } else {
-                const option = document.createElement('option');
-                option.value = "0";
-                option.textContent = "אין שאלות זמינות";
-                questionSelect.appendChild(option);
-                questionSelect.disabled = true;
-            }
-        }
-        
-        // --- Problem Loading (Your existing, verified logic, adapted for MathJax) ---
-        function loadProblemFromIndex() { // This is your existing function name
-            resetUIState(); 
-            showLoading(true);
-            if (!moduleSelect || !yearSelect || !questionSelect || !problemDisplaySection) {
-                 showLoading(false); 
-                 console.error("Dropdowns or problem display not found for loading problem.");
-                 return;
-            }
-            const module = moduleSelect.value;
-            const year = yearSelect.value;
-            const questionNum = parseInt(questionSelect.value);
-
-            if (!module || !year || isNaN(questionNum) || questionNum === 0) {
-                problemDisplaySection.innerHTML = `<div class="bg-yellow-100 text-yellow-800 p-4 rounded-lg text-center">אנא בחר מודול, שנה ושאלה.</div>`;
-                currentProblem = null;
-                showLoading(false);
-                return;
-            }
-
-            const problemData = bagrutQuestionsData[module]?.[year]?.[questionNum - 1];
-            if (problemData) {
-                currentProblem = { ...problemData }; 
-                lastMathTopic = currentProblem.topic || 'מתמטיקה'; 
-                let problemHtml = `
-                    <h2 class="text-xl sm:text-2xl font-semibold text-blue-800 mb-3 text-center">
-                        שאלה ${questionNum} (${currentProblem.difficulty || 'לא ידוע'}) ${currentProblem.mikud ? '(מיקוד)' : ''}
-                    </h2>
-                    <div class="math-problem-display text-xl font-semibold text-center leading-relaxed">
-                        ${currentProblem.question} 
-                    </div>
-                `; 
-                if (currentProblem.imageUrl && currentProblem.imageUrl.startsWith("#")) { 
-                    problemHtml += `
-                        <div class="mt-4 text-center">
-                            <svg width="300" height="200" class="mx-auto rounded-lg shadow-md max-w-full h-auto">
-                                <use href="${currentProblem.imageUrl}"></use>
-                            </svg>
-                            <p class="text-sm text-gray-600 mt-2">(אנא עיין בתרשים המקורי בשאלון הבגרות למען הדיוק המלא)</p>
-                        </div>`;
-                } else if (currentProblem.imageUrl) { 
-                     problemHtml += `
-                        <div class="mt-4 text-center">
-                            <img src="${currentProblem.imageUrl}" alt="תרשים השאלה" class="mx-auto rounded-lg shadow-md max-w-full h-auto" onerror="this.onerror=null;this.src='https://placehold.co/400x250/cccccc/000000?text=תרשים+לא+זמין'; this.alt='תרשים לא זמין';">
-                            <p class="text-sm text-gray-600 mt-2">(אנא עיין בתרשים המקורי בשאלון הבגרות למען הדיוק המלא)</p>
-                        </div>`;
-                }
-                problemDisplaySection.innerHTML = problemHtml;
-                if (window.MathJax && MathJax.typesetPromise) { 
-                    MathJax.typesetPromise([problemDisplaySection]).catch((err) => console.error('MathJax typesetting error:', err));
-                }
-                triggerProactiveTip(); 
-            } else { 
-                currentProblem = null;
-                problemDisplaySection.innerHTML = `<div class="bg-yellow-100 text-yellow-800 p-4 rounded-lg text-center">לא נמצאה שאלה עבור הבחירה הנוכחית.</div>`;
-             }
-            showLoading(false);
-        }
-        
-        // --- Gemini API Call ---
-        async function callGeminiAPI(promptText, isChatContext = false) { /* ... (JavaScript from previous version, ensure GEMINI_MODEL_NAME is used) ... */ }
-
-        // --- Hint System ---
-        async function getHint() { /* ... (JavaScript from previous version, ensure MathJax call for hintDisplay) ... */ }
-
-        // --- Answer Processing (Your existing logic, adapted for new features) ---
-        async function checkTypedAnswer() { // This is your existing function, I'll integrate history into it.
-            if (!geminiApiKey) {
-                showErrorMessage('אנא הזן ושמור את מפתח ה-API של Gemini לפני השימוש בתכונות AI.');
-                return;
-            }
-            if (!currentProblem || studentAnswerInput.value.trim() === '') {
-                showErrorMessage('אנא בחר שאלה והקלד תשובה.');
-                return;
-            }
-            showLoading(true);
-            hideErrorMessage();
-            // Reset other UI elements as in your original function
-            aiFeedbackContent.innerHTML = '';
-            aiFeedbackDisplay.classList.add('hidden');
-            checkAnswerResultDisplay.classList.add('hidden');
-            isInStepByStepMode = false;
-            currentStepIndex = 0;
-            stepByStepHistory = [];
-            currentSubProblemAnswerInput.value = '';
-            stepByStepSection.classList.add('hidden');
-            document.getElementById('initialAnswerSection').classList.remove('hidden'); // Ensure this is visible
-            document.getElementById('imageUploadSection').classList.remove('hidden'); // Ensure this is visible
-
-
-            try {
-                const prompt = `אתה מורה למתמטיקה מומחה לתלמידי בגרות 3 יחידות בישראל.
-                השאלה היא: "${currentProblem.question}"
-                התשובה שהתלמיד הגיש היא: "${studentAnswerInput.value}".
-                התשובה הנכונה הידועה (אם רלוונטי להשוואה ישירה) היא: "${currentProblem.answer}".
-                קבע **בלבד** אם התשובה שהוגשה נכונה או שגויה בהשוואה לתשובה הידועה.
-                התשובה שלך צריכה להיות אחת משתי מילים בלבד בעברית: "נכון" או "שגוי".`;
-
-                const apiResponseText = await callGeminiAPI(prompt); // Re-using the generic API call
-                
-                let isCorrect = false;
-                if (apiResponseText) {
-                    const aiEvaluation = apiResponseText.trim().toLowerCase();
-                    isCorrect = (aiEvaluation === 'נכון');
-                }
-
-                addHistoryEntry(currentProblem.id, currentProblem.question, isCorrect, false, studentAnswerInput.value);
-
-                if (isCorrect) {
-                    checkAnswerResult = 'correct';
-                    checkAnswerResultDisplay.className = 'p-4 rounded-lg mb-2 text-center font-semibold text-lg bg-green-100 text-green-700 border border-green-400';
-                    checkAnswerResultDisplay.innerHTML = `כל הכבוד! תשובה נכונה! 🎉 
-                        <button id="loadNewProblemAfterCorrect" class="mt-3 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">טען שאלה חדשה</button>`;
-                    if(document.getElementById('loadNewProblemAfterCorrect')) {
-                        document.getElementById('loadNewProblemAfterCorrect').addEventListener('click', loadProblemFromIndex);
-                    }
-                    acknowledgeFeedbackButton.classList.add('hidden');
-                } else {
-                    checkAnswerResult = 'incorrect';
-                    checkAnswerResultDisplay.className = 'p-4 rounded-lg mb-2 text-center font-semibold text-lg bg-red-100 text-red-700 border border-red-400';
-                    checkAnswerResultDisplay.innerHTML = 'תשובה שגויה.';
-                    
-                    acknowledgeFeedbackButton.textContent = 'המשך להדרכה שלב אחר שלב';
-                    acknowledgeFeedbackButton.classList.remove('hidden');
-                    acknowledgeFeedbackButton.onclick = () => {
-                        acknowledgeFeedbackButton.classList.add('hidden');
-                        checkAnswerResultDisplay.classList.add('hidden');
-                        document.getElementById('initialAnswerSection').style.display = 'none'; 
-                        document.getElementById('imageUploadSection').style.display = 'none';
-                        stepByStepSection.classList.remove('hidden');
-                        startStepByStepGuidance(); // This function will be from the new features
-                    };
-                }
-                checkAnswerResultDisplay.classList.remove('hidden');
-                if (window.MathJax && MathJax.typesetPromise) {
-                    MathJax.typesetPromise([checkAnswerResultDisplay]).catch((err) => console.error('MathJax error:', err));
-                }
-
-            } catch (error) {
-                showErrorMessage(`שגיאה בבדיקת התשובה: ${error.message}. אנא נסה שוב.`);
-                console.error('Error in checkTypedAnswer:', error);
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // This function will handle both typed answers and image uploads, replacing your old checkAnswerButton logic
-        async function processStudentInput() {
-            if (!currentProblem) {
-                showErrorMessage('אנא בחר שאלה תחילה.');
-                return;
-            }
-            const typedAnswer = studentAnswerInput.value.trim();
-            const uploadedFile = imageUploadInput.files[0];
-
-            if (typedAnswer === '' && !uploadedFile) {
-                showErrorMessage('אנא הקלד תשובה או העלה קובץ של עבודתך.');
-                return;
-            }
-
-            checkAnswerButton.disabled = true;
-            hideErrorMessage();
-            aiFeedbackDisplay.classList.add('hidden'); 
-            aiFeedbackContent.innerHTML = '';
-            let feedbackHTML = ''; 
-            let isTypedCorrect = null;
-            let usedGuidanceForTyped = false;
-
-
-            if (typedAnswer !== '') {
-                const promptCheckAnswer = `אתה מורה למתמטיקה מומחה לבגרות 3 יחידות.
-                השאלה היא: "${currentProblem.question}"
-                התשובה שהתלמיד הגיש בהקלדה היא: "${typedAnswer}".
-                התשובה הנכונה הידועה (אם רלוונטי להשוואה ישירה) היא: "${currentProblem.answer}".
-                קבע אם התשובה שהוגשה נכונה או שגויה. 
-                אם היא נכונה, פשוט אמור: "התשובה שהוקלדה נכונה!".
-                אם היא שגויה, פשוט אמור: "התשובה שהוקלדה שגויה."
-                אל תספק הסבר נוסף בשלב זה.`;
-                const answerEvalText = await callGeminiAPI(promptCheckAnswer);
-
-                if (answerEvalText) {
-                    isTypedCorrect = answerEvalText.includes("נכונה");
-                    feedbackHTML += `<div class="p-3 mb-3 rounded-lg ${isTypedCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}"><strong>בדיקת תשובה מוקלדת:</strong> ${answerEvalText}</div>`; // MathJax will process this
-                    
-                    if (!uploadedFile && !isTypedCorrect) { // Only typed answer, and it's wrong
-                        usedGuidanceForTyped = true;
-                        addHistoryEntry(currentProblem.id, currentProblem.question, false, true, typedAnswer);
-                        
-                        checkAnswerResultDisplay.innerHTML = feedbackHTML; 
-                        checkAnswerResultDisplay.classList.remove('hidden');
-                        if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([checkAnswerResultDisplay]);
-
-                        acknowledgeFeedbackButton.textContent = 'המשך להדרכה שלב אחר שלב';
-                        acknowledgeFeedbackButton.classList.remove('hidden');
-                        acknowledgeFeedbackButton.onclick = () => {
-                            acknowledgeFeedbackButton.classList.add('hidden');
-                            checkAnswerResultDisplay.classList.add('hidden');
-                            document.getElementById('initialAnswerSection').style.display = 'none'; 
-                            document.getElementById('imageUploadSection').style.display = 'none';
-                            stepByStepSection.classList.remove('hidden');
-                            startStepByStepGuidance();
-                        };
-                        checkAnswerButton.disabled = false;
-                        return; 
-                    } else if (isTypedCorrect) {
-                         addHistoryEntry(currentProblem.id, currentProblem.question, true, false, typedAnswer);
-                    } else { // Typed answer is incorrect, but there's also an image
-                         addHistoryEntry(currentProblem.id, currentProblem.question, false, false, typedAnswer);
-                    }
-                } else {
-                     feedbackHTML += `<div class="p-3 mb-3 rounded-lg bg-yellow-100 text-yellow-700">לא ניתן היה לבדוק את התשובה המוקלדת כרגע.</div>`;
-                }
-            }
-
-            if (uploadedFile) {
-                const promptImageFeedback = `אתה מורה למתמטיקה מומחה לבגרות 3 יחידות.
-                הבעיה הנוכחית היא: "${currentProblem.question}".
-                התלמיד העלה תמונה של עבודתו בכתב יד (אין לך גישה לתמונה, אך התייחס לכך שהיא קיימת).
-                אנא ספק משוב קצר (2-3 משפטים) על גישות אפשריות או טעויות נפוצות הקשורות לפתרון בעיה זו בכתב יד.
-                התייחס לכך שהתלמיד ניסה לפתור את הבעיה. השתמש ב-LaTeX לביטויים מתמטיים.`;
-                const imageFeedbackText = await callGeminiAPI(promptImageFeedback);
-                if (imageFeedbackText) {
-                    feedbackHTML += `<div class="p-3 rounded-lg bg-indigo-50 text-indigo-700 mt-3"><strong>משוב על עבודה שהועלתה:</strong><br>${imageFeedbackText}</div>`; // MathJax will process
-                    // If only image was uploaded, add a history entry for it (outcome unknown without AI evaluation of image content)
-                    if (typedAnswer === '') {
-                        addHistoryEntry(currentProblem.id, currentProblem.question, null, false, "הועלתה תמונה");
-                    }
-                } else {
-                    feedbackHTML += `<div class="p-3 rounded-lg bg-yellow-100 text-yellow-700 mt-3">לא ניתן היה לקבל משוב על הקובץ שהועלה כרגע.</div>`;
-                }
-            }
-            
-            if (feedbackHTML) {
-                aiFeedbackContent.innerHTML = feedbackHTML;
-                aiFeedbackDisplay.classList.remove('hidden');
-                if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([aiFeedbackContent]);
-            }
-
-            if (typedAnswer !== '' && isTypedCorrect && !uploadedFile) { 
-                 acknowledgeFeedbackButton.textContent = 'טען שאלה חדשה';
-                 acknowledgeFeedbackButton.onclick = () => {
-                    acknowledgeFeedbackButton.classList.add('hidden');
-                    aiFeedbackDisplay.classList.add('hidden');
-                    loadProblemFromIndex(); // Your existing function
-                };
-            } else {
-                acknowledgeFeedbackButton.textContent = 'הבנתי';
-                 acknowledgeFeedbackButton.onclick = () => {
-                    acknowledgeFeedbackButton.classList.add('hidden');
-                    aiFeedbackDisplay.classList.add('hidden'); 
-                };
-            }
-            if (feedbackHTML) { 
-                acknowledgeFeedbackButton.classList.remove('hidden');
-            }
-            
-            checkAnswerButton.disabled = false;
-        }
-
-
-        // --- Step-by-Step Guidance (New Features) ---
-        async function startStepByStepGuidance() { /* ... (JavaScript from previous version, ensure MathJax calls) ... */ }
-        function extractContent(text, startMarker, endMarker) { /* ... (JavaScript from previous version) ... */ }
-        async function checkSubStepAnswer() { /* ... (JavaScript from previous version, ensure MathJax calls) ... */ }
-        function handleNextAfterSubStepFeedback(aiResponseText, lastUserSubStepAnswer) { /* ... (JavaScript from previous version, ensure MathJax calls and history entry) ... */ }
-        
-        // --- Modify Problem (Your existing logic, ensure MathJax for new problem) ---
-        async function simplifyProblem() { /* ... (JavaScript from previous version, ensure MathJax call) ... */ }
-        async function makeHarderProblem() { /* ... (JavaScript from previous version, ensure MathJax call) ... */ }
-
-        // --- Chatbot & Tips (New Features) ---
-        function hideProactiveTip() { /* ... (JavaScript from previous version) ... */ }
-        async function triggerProactiveTip() { /* ... (JavaScript from previous version) ... */ }
-        function renderChatMessages() { /* ... (JavaScript from previous version, ensure MathJax calls) ... */ }
-        async function sendChatMessage() { /* ... (JavaScript from previous version) ... */ }
-
-        // --- Paste Image (New Feature) ---
-        // Event listener will be in window.onload
-
-        // --- Whiteboard Functionality (New Feature) ---
-        function resizeWhiteboardCanvas() { /* ... (JavaScript from previous version) ... */ }
-        function openWhiteboard() { /* ... (JavaScript from previous version) ... */ }
-        function closeWhiteboard() { /* ... (JavaScript from previous version) ... */ }
-        function clearWhiteboard() { /* ... (JavaScript from previous version) ... */ }
-        function getMousePos(canvas, evt) { /* ... (JavaScript from previous version) ... */ }
-        function getTouchPos(canvas, touch) { /* ... (JavaScript from previous version) ... */ }
-        function startDrawing(e) { /* ... (JavaScript from previous version) ... */ }
-        function drawOnWhiteboard(e) { /* ... (JavaScript from previous version) ... */ }
-        function stopDrawing() { /* ... (JavaScript from previous version) ... */ }
-        async function saveWhiteboardAsImage() { /* ... (JavaScript from previous version) ... */ }
-        
-        // --- Event Listeners ---
-        window.onload = function() {
-            // Initialize DOM elements (same as previous version)
-            settingsButton = document.getElementById('settingsButton'); 
-            historyButton = document.getElementById('historyButton'); 
-            settingsMenu = document.getElementById('settingsMenu'); 
-            historyMenu = document.getElementById('historyMenu'); 
-            historyPanelContent = document.getElementById('historyPanelContent'); 
-            exportCsvButton = document.getElementById('exportCsvButton'); 
-            exportJsonButton = document.getElementById('exportJsonButton'); 
-            getRecommendationsButton = document.getElementById('getRecommendationsButton'); 
-            aiRecommendationsContent = document.getElementById('aiRecommendationsContent'); 
-            getHintButton = document.getElementById('getHintButton'); 
-            hintDisplay = document.getElementById('hintDisplay'); 
-            apiKeyInput = document.getElementById('apiKeyInput');
-            saveApiKeyButton = document.getElementById('saveApiKeyButton');
-            apiKeyStatus = document.getElementById('apiKeyStatus');
-            moduleSelect = document.getElementById('moduleSelect');
-            yearSelect = document.getElementById('yearSelect');
-            questionSelect = document.getElementById('questionSelect');
-            loadProblemButton = document.getElementById('loadProblemButton');
-            problemDisplaySection = document.getElementById('problemDisplaySection');
-            studentAnswerInput = document.getElementById('studentAnswer');
-            checkAnswerButton = document.getElementById('checkAnswerButton'); 
-            checkAnswerResultDisplay = document.getElementById('checkAnswerResultDisplay');
-            acknowledgeFeedbackButton = document.getElementById('acknowledgeFeedbackButton');
-            stepByStepSection = document.getElementById('stepByStepSection');
-            currentStepNumberSpan = document.getElementById('currentStepNumber');
-            currentSubProblemQuestionDiv = document.getElementById('currentSubProblemQuestion');
-            currentSubProblemAnswerInput = document.getElementById('currentSubProblemAnswer');
-            checkSubStepButton = document.getElementById('checkSubStepButton');
-            imageUploadInput = document.getElementById('imageUpload');
-            pasteZone = document.getElementById('pasteZone'); 
-            selectedImageName = document.getElementById('selectedImageName');
-            simplifyProblemButton = document.getElementById('simplifyProblemButton');
-            makeHarderProblemButton = document.getElementById('makeHarderProblemButton');
-            loadingIndicator = document.getElementById('loadingIndicator');
-            errorMessageDisplay = document.getElementById('errorMessageDisplay');
-            errorMessageText = document.getElementById('errorMessageText');
-            aiFeedbackDisplay = document.getElementById('aiFeedbackDisplay');
-            aiFeedbackContent = document.getElementById('aiFeedbackContent');
-            mathBotToggleContainer = document.getElementById('mathBotToggleContainer');
-            mathBotToggle = document.getElementById('mathBotToggle');
-            proactiveTipBubble = document.getElementById('proactiveTipBubble');
-            mathBotContainer = document.getElementById('mathBotContainer');
-            closeChatButton = document.getElementById('closeChatButton');
-            chatMessagesDisplay = document.getElementById('chatMessagesDisplay');
-            chatInput = document.getElementById('chatInput');
-            sendChatMessageButton = document.getElementById('sendChatMessageButton');
-            openWhiteboardButton = document.getElementById('openWhiteboardButton');
-            whiteboardModal = document.getElementById('whiteboardModal');
-            drawingBoard = document.getElementById('drawingBoard');
-            saveWhiteboardButton = document.getElementById('saveWhiteboardButton');
-            clearWhiteboardButton = document.getElementById('clearWhiteboardButton');
-            closeWhiteboardButton = document.getElementById('closeWhiteboardButton');
-
-            if (drawingBoard) {
-                whiteboardCtx = drawingBoard.getContext('2d');
-                 if (!whiteboardCtx) {
-                    console.error("Failed to get 2D context for drawing board!");
-                }
-            } else {
-                console.error("Drawing board element not found on load!");
-                if(openWhiteboardButton) openWhiteboardButton.disabled = true; 
-            }
-
-            loadApiKey(); 
-            loadUserHistory(); 
-            populateDropdowns(); // Your existing function
-            loadProblemFromIndex(); // Your existing function
-
-            // Event Listeners for NEW Features
-            if(settingsButton) settingsButton.addEventListener('click', toggleSettingsMenu); 
-            if(historyButton) historyButton.addEventListener('click', toggleHistoryMenu); 
-            if(getHintButton) getHintButton.addEventListener('click', getHint); 
-            if(exportCsvButton) exportCsvButton.addEventListener('click', exportAsCsv); 
-            if(exportJsonButton) exportJsonButton.addEventListener('click', exportAsJson); 
-            if(getRecommendationsButton) getRecommendationsButton.addEventListener('click', getAIRecommendations); 
-            if(openWhiteboardButton) openWhiteboardButton.addEventListener('click', openWhiteboard);
-            if(closeWhiteboardButton) closeWhiteboardButton.addEventListener('click', closeWhiteboard);
-            if(clearWhiteboardButton) clearWhiteboardButton.addEventListener('click', clearWhiteboard);
-            if(saveWhiteboardButton) saveWhiteboardButton.addEventListener('click', saveWhiteboardAsImage);
-            if (drawingBoard) {
-                drawingBoard.addEventListener('mousedown', startDrawing);
-                drawingBoard.addEventListener('mousemove', drawOnWhiteboard);
-                drawingBoard.addEventListener('mouseup', stopDrawing);
-                drawingBoard.addEventListener('mouseleave', stopDrawing); 
-                drawingBoard.addEventListener('touchstart', startDrawing, { passive: false });
-                drawingBoard.addEventListener('touchmove', drawOnWhiteboard, { passive: false });
-                drawingBoard.addEventListener('touchend', stopDrawing);
-                drawingBoard.addEventListener('touchcancel', stopDrawing);
-            }
-            if(pasteZone) pasteZone.addEventListener('paste', function(event) { 
-                event.preventDefault(); 
-                const items = (event.clipboardData || window.clipboardData).items;
-                let imageFile = null;
-                for (let i = 0; i < items.length; i++) {
-                    if (items[i].type.indexOf('image') !== -1) {
-                        imageFile = items[i].getAsFile();
-                        break;
-                    }
-                }
-                if (imageFile && imageUploadInput && selectedImageName && pasteZone) {
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(imageFile);
-                    imageUploadInput.files = dataTransfer.files;
-                    selectedImageName.textContent = `קובץ הודבק: ${imageFile.name}`;
-                    pasteZone.textContent = 'תמונה הודבקה בהצלחה!';
-                    setTimeout(() => { 
-                         pasteZone.textContent = 'או הדבק צילום מסך כאן (Ctrl+V)';
-                    }, 3000);
-                } else if (selectedImageName && pasteZone) {
-                    selectedImageName.textContent = 'ההדבקה לא הכילה תמונה חוקית.';
-                     pasteZone.textContent = 'לא זוהתה תמונה בהדבקה.';
-                     setTimeout(() => {
-                         pasteZone.textContent = 'או הדבק צילום מסך כאן (Ctrl+V)';
-                    }, 3000);
-                }
-            });
-             if(mathBotToggle) mathBotToggle.addEventListener('click', () => {
-                if(mathBotContainer) mathBotContainer.classList.toggle('expanded');
-                if (mathBotContainer && mathBotContainer.classList.contains('expanded')) {
-                    hideProactiveTip(); 
-                    if(chatInput) chatInput.focus();
-                }
-            });
-            if(closeChatButton) closeChatButton.addEventListener('click', () => {
-                if(mathBotContainer) mathBotContainer.classList.remove('expanded');
-            });
-            if(sendChatMessageButton) sendChatMessageButton.addEventListener('click', sendChatMessage);
-            if(chatInput) chatInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendChatMessage();
-                }
-            });
-
-
-            // Your EXISTING Event Listeners (should not be changed unless necessary for new feature integration)
-            if(moduleSelect) moduleSelect.addEventListener('change', () => { populateYears(); populateQuestions(); loadProblemFromIndex(); });
-            if(yearSelect) yearSelect.addEventListener('change', () => { populateQuestions(); loadProblemFromIndex(); });
-            if(questionSelect) questionSelect.addEventListener('change', loadProblemFromIndex);
-            if(loadProblemButton) loadProblemButton.addEventListener('click', loadProblemFromIndex);
-            
-            // The main checkAnswerButton now calls processStudentInput which handles typed and image
-            if(checkAnswerButton) checkAnswerButton.addEventListener('click', processStudentInput); 
-            
-            // Your original checkSubStepButton listener (if it's different from the new one, integrate carefully)
-            // For now, assuming the new checkSubStepAnswer handles this.
-            if(checkSubStepButton && typeof checkSubStepAnswer === 'function') { // Ensure new function exists
-                 checkSubStepButton.addEventListener('click', checkSubStepAnswer);
-            } else if (document.getElementById('checkSubStepButton') && typeof originalCheckSubStepAnswer === 'function') { // Fallback to an assumed original
-                // document.getElementById('checkSubStepButton').addEventListener('click', originalCheckSubStepAnswer);
-            }
-
-
-            if(imageUploadInput) imageUploadInput.addEventListener('change', (e) => { 
-                if (e.target.files && e.target.files[0]) {
-                    if(selectedImageName) selectedImageName.textContent = `קובץ נבחר: ${e.target.files[0].name}`;
-                    if(pasteZone) pasteZone.textContent = 'קובץ נבחר. ניתן להדביק אחר במקומו.';
-                } else {
-                    if(selectedImageName) selectedImageName.textContent = '';
-                }
-            });
-            if(simplifyProblemButton) simplifyProblemButton.addEventListener('click', () => modifyProblem('simplify'));
-            if(makeHarderProblemButton) makeHarderProblemButton.addEventListener('click', () => modifyProblem('makeHarder'));
-            if(saveApiKeyButton) saveApiKeyButton.addEventListener('click', saveApiKey);
-            
-            // The old getAIFeedbackOnUploadButton listener is removed as its functionality is merged.
-            // const getAIFeedbackOnUploadButtonOld = document.getElementById('getAIFeedbackOnUploadButton');
-            // if(getAIFeedbackOnUploadButtonOld) getAIFeedbackOnUploadButtonOld.addEventListener('click', getAIFeedbackOnUpload);
-
-
-            window.addEventListener('resize', resizeWhiteboardCanvas); 
-        };
-    </script>
+    <script src="script.js" type="module" defer></script>
 </body>
 </html>
